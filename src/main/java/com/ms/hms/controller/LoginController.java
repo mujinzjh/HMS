@@ -26,6 +26,7 @@ public class LoginController {
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("user",user);
         resultMap.put("token",token);
+        System.out.println(resultMap);
         return R.ok().data(resultMap);
     }
 }
