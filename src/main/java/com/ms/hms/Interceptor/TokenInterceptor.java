@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 public class TokenInterceptor implements HandlerInterceptor {
     @Autowired
     private UserService userService;
+
+    public static final ThreadLocal<SysUser> THREAD_LOCAL= new ThreadLocal<>();
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
@@ -41,6 +44,12 @@ public class TokenInterceptor implements HandlerInterceptor {
             throw new ServiceException(ResultHttpCode.TOKEN_INVAILD);
         }
 
+        THREAD_LOCAL.set(user);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        THREAD_LOCAL.remove();
     }
 }

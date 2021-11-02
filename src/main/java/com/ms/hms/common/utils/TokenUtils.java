@@ -7,7 +7,7 @@ import com.ms.hms.entity.SysUser;
 import java.util.Date;
 
 public class TokenUtils {
-    private static final int EXPIRE_TIME = 5*60*1000;
+    private static final int EXPIRE_TIME = 60*60*1000;
 
     public static String createToken (SysUser user){
         Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);

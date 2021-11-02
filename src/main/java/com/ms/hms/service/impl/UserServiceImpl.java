@@ -7,7 +7,9 @@ import com.ms.hms.mapper.UserMapper;
 import com.ms.hms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.List;
 
 @Service
@@ -25,6 +27,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,SysUser> implements 
         queryWrapper.eq(SysUser::getUsername,username);
         List<SysUser> _list = userMapper.selectList(queryWrapper);
         return _list.size()>0? _list.get(0) : null;
+    }
+
+    @Override
+    public void  insertUser(SysUser user){
+        userMapper.insert(user);
+    }
+
+    @Transactional
+    @Override
+    public void updatePwd(Long id,String password) {
+        try {
+            userMapper.changePwd(id,password,System.currentTimeMillis());
+        } catch (Exception e) {
+            System.out.println(e);
+            e.printStackTrace();
+        }
     }
 
 }

@@ -7,4 +7,8 @@ public interface UserService extends IService<SysUser> {
     SysUser findById(Long id);
 
     SysUser findByName(String username);
+
+    void updatePwd(Long id, String password);
+
+    void insertUser(SysUser sysUser);
 }
