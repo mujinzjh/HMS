@@ -9,7 +9,6 @@ public class ServiceException extends BaseException {
 
     public ServiceException(ResultHttpCode r) {
         super(r, r.getDesc());
-        System.out.println(r);
     }
 
     public ServiceException(ResultHttpCode r, Object obj) {
