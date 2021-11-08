@@ -13,7 +13,7 @@ import lombok.Getter;
 public enum  ExceptionCode implements BaseR {
 
     TOKEN_IS_INVALID("10004","no token",""),
-    PASSWORD_ERROR("10005","pwd error","密码错误");
+    ACCOUNT_OR_PASSWORD_ERROR("10005","pwd error","密码错误");
 
     private final String code;
     private final String msg;

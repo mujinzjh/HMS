@@ -2,6 +2,7 @@ package com.ms.hms.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.ms.hms.Interceptor.TokenInterceptor;
+import com.ms.hms.aop.Log;
 import com.ms.hms.common.Constants;
 import com.ms.hms.common.redis.RedisService;
 import com.ms.hms.common.result.R;
@@ -22,34 +23,37 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping
 public class LoginController {
+    private static String token;
     @Autowired
     private UserService userService;
     @Autowired
     private RedisService redisService;
 
+    @Log(value = "登录")
     @PostMapping(value = "/login")
-    public R login(@RequestBody LoginParam loginParam, HttpServletRequest request){
+    public R login(@RequestBody LoginParam loginParam, HttpServletRequest request) {
         SysUser user = userService.findByName(loginParam.getAccount());
-        String token = TokenUtils.createToken(user);
+        if (user == null || !loginParam.getPassword().equalsIgnoreCase(user.getPassword())) {
+            throw new ServiceException(ExceptionCode.ACCOUNT_OR_PASSWORD_ERROR);
+        }
+        token = TokenUtils.createToken(user);
         String userStr = JSON.toJSONString(user);
         redisService.set(token, userStr, Constants.USER_TOKEN_EXPIRE);
-        Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("user",user);
-        resultMap.put("token",token);
-        System.out.println(resultMap);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("user", user);
+        resultMap.put("token", token);
         return R.ok().data(resultMap);
     }
 
 
-//    修改密码
-
+    //    修改密码
+    @Log(value = "修改密码")
     @PostMapping(value = "/updatePwd")
-    public R updatePwd (@RequestBody UpdatePwd uPwd) {
+    public R updatePwd(@RequestBody UpdatePwd uPwd) {
         if (uPwd.getOldPwd() == null || uPwd.getPassword() == null) {
             throw new ServiceException(ResultHttpCode.BUSINESS_FAILURE);
         }
@@ -60,15 +64,26 @@ public class LoginController {
             throw new ServiceException(ResultHttpCode.TOKEN_INVAILD);
         }
         if (!uPwd.getOldPwd().equalsIgnoreCase(user.getPassword())) {
-            throw new ServiceException(ExceptionCode.PASSWORD_ERROR);
+            throw new ServiceException(ExceptionCode.ACCOUNT_OR_PASSWORD_ERROR);
         }
 
-        userService.updatePwd(user.getId(),uPwd.getPassword());
+        userService.updatePwd(user.getId(), uPwd.getPassword());
+        return R.ok();
+    }
+
+    //修改密码
+    @PostMapping(value = "/logOut")
+    public R loginOut() {
+        SysUser user = TokenInterceptor.THREAD_LOCAL.get();
+        if (user == null) {
+            throw new ServiceException(ResultHttpCode.TOKEN_INVAILD);
+        }
+        redisService.deleteKey(token);
         return R.ok();
     }
 
     @PostMapping(value = "/add")
-    public R insertUser () {
+    public R insertUser() {
         SysUser sysUser = new SysUser();
         sysUser.setUsername("llj");
         sysUser.setPassword("111111");
