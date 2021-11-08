@@ -13,6 +13,9 @@ spring:
       path: /hms
   main:
     allow-bean-definition-overriding: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 #mybatis配置
 mybatis-plus:
@@ -24,3 +27,5 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 server:
   port: 8080
+
+
