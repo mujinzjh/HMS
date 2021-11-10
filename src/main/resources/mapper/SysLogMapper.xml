@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ms.hms.mapper.SysLogMapper">
+    <select id="getSysLogListCount" resultType="Integer">
+        select count(*) from tb_sys_log
+        where status = 2
+        <if test="operation_time != null and operation_time > 0">
+            and operation_time = #{operation_time}
+        </if>
+    </select>
+
+
+    <select id="getSysLogList" resultType="SysLog">
+        select * from tb_sys_log
+        where status = 2
+        <if test="operation_time != null and operation_time > 0">
+            and operation_time = #{operation_time}
+        </if>
+        order by tb_sys_log.operation_time
+        limit #{offset},#{pageSize}
+    </select>
+
+</mapper>
