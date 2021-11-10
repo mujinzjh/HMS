@@ -1,5 +1,6 @@
 package com.ms.hms.service.impl;
 
+<<<<<<< HEAD
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ms.hms.common.PageModel;
@@ -7,12 +8,16 @@ import com.ms.hms.common.result.R;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+=======
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+>>>>>>> 77046095efe2b1a6d9c77fdbca41f5a97595b9bc
 import com.ms.hms.entity.SysLog;
 import com.ms.hms.mapper.SysLogMapper;
 import com.ms.hms.service.SysLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,12 +29,19 @@ import java.util.Map;
 public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> implements SysLogService {
     @Autowired
     private SysLogMapper sysLogMapper;
+=======
+@Service
+public class SysLogServiceImpl extends ServiceImpl<SysLogMapper,SysLog> implements SysLogService {
+    @Autowired
+    private  SysLogMapper sysLogMapper;
+>>>>>>> 77046095efe2b1a6d9c77fdbca41f5a97595b9bc
 
 
     @Override
     public int saveLog(SysLog sysLog) {
         return sysLogMapper.insert(sysLog);
     }
+<<<<<<< HEAD
 
 
     @Override
@@ -55,4 +67,6 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         list = sysLogMapper.getSysLogList(searchMap);
         return R.ok().data(list).ext(pageModel);
     }
+=======
+>>>>>>> 77046095efe2b1a6d9c77fdbca41f5a97595b9bc
 }
