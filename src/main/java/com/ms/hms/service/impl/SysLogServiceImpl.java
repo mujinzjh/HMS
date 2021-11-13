@@ -4,9 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ms.hms.common.PageModel;
 import com.ms.hms.common.result.R;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
 import com.ms.hms.entity.SysLog;
 import com.ms.hms.mapper.SysLogMapper;
 import com.ms.hms.service.SysLogService;
@@ -20,13 +17,18 @@ import java.util.Map;
 
 
 @Service
-public class SysLogServiceImpl extends ServiceImpl<SysLogMapper,SysLog> implements SysLogService {
+public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> implements SysLogService {
     @Autowired
-    private  SysLogMapper sysLogMapper;
+    private SysLogMapper sysLogMapper;
 
     @Override
     public int saveLog(SysLog sysLog) {
-        return sysLogMapper.insert(sysLog);
+        try {
+            return sysLogMapper.insert(sysLog);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override

@@ -12,4 +12,6 @@ public class Constants {
     //成功的状态码
     public static String SUCCESS_CODE = "200";
 
+    public static String DEFAULT_PASSWORD = "111111";
+
 }

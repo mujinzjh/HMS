@@ -15,16 +15,16 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
     @Bean
-    public RedisTemplate redisTemplate(LettuceConnectionFactory redisConnectionFactory){
+    public RedisTemplate redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         jackson2JsonRedisSerializer.setObjectMapper(om);
 
         RedisSerializer<?> stringSerializer = new StringRedisSerializer();
-        RedisTemplate redisTemplate = new RedisTemplate<String,Object>();
+        RedisTemplate redisTemplate = new RedisTemplate<String, Object>();
         redisTemplate.setKeySerializer(stringSerializer);
         redisTemplate.setHashKeySerializer(stringSerializer);
         redisTemplate.setValueSerializer(stringSerializer);

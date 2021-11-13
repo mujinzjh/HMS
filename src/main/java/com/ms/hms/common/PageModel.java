@@ -20,26 +20,26 @@ public class PageModel {
         setCurrentPage(page);
     }
 
-    public static  PageModel newPageModel(final int pageSize, final int page, final int totalRecord){
+    public static PageModel newPageModel(final int pageSize, final int page, final int totalRecord) {
         return new PageModel(pageSize, page, totalRecord);
     }
 
-    public void setCurrentPage(int page){
+    public void setCurrentPage(int page) {
         currentPage = page;
-        if (currentPage>totalPage){
+        if (currentPage > totalPage) {
             currentPage = totalPage;
         }
-        if (currentPage<1){
-            currentPage =1;
+        if (currentPage < 1) {
+            currentPage = 1;
         }
     }
 
     @JSONField(serialize = false)
-    public int getOffset(){
-        if (pageSize < 0 ) {
+    public int getOffset() {
+        if (pageSize < 0) {
             return -1;
         } else {
-            return (currentPage-1) * pageSize;
+            return (currentPage - 1) * pageSize;
         }
     }
 

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalHandler {
     @ExceptionHandler(value = Exception.class)
-    public R handlerException(Exception e){
-        if (e instanceof BaseException){
+    public R handlerException(Exception e) {
+        if (e instanceof BaseException) {
             BaseR baseR = ((BaseException) e).getR();
             return new R(baseR);
         } else {

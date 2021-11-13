@@ -7,7 +7,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 
-#  配置基础路径
+  #  配置基础路径
   mvc:
     servlet:
       path: /hms
@@ -16,6 +16,7 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
+
 
 #mybatis配置
 mybatis-plus:

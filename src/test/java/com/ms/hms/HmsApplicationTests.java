@@ -13,7 +13,7 @@ class HmsApplicationTests {
 
     @Test
     void contextLoads() {
-        stringRedisTemplate.opsForValue().append("ms","hello");
+        stringRedisTemplate.opsForValue().append("ms", "hello");
     }
 
 }

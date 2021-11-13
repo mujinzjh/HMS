@@ -28,11 +28,12 @@ public enum ExceptionCode implements BaseR {
     }
 
     @Override
-    public String getMsg(){
+    public String getMsg() {
         return msg;
     }
+
     @Override
-    public String getDesc(){
+    public String getDesc() {
         return desc;
     }
 }

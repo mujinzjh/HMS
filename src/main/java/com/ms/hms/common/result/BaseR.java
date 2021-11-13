@@ -11,7 +11,7 @@ public interface BaseR {
     String getDesc();
 
     //返回结果
-    default Object getResult(){
+    default Object getResult() {
         return null;
     }
 

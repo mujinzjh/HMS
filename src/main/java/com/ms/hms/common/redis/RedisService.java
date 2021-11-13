@@ -16,10 +16,9 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class RedisService {
+    public static final long NOT_EXPIRE = -1;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-
-    public static final long NOT_EXPIRE = -1;
 
     public boolean set(final String key, String value) {
         boolean result = false;
@@ -35,12 +34,12 @@ public class RedisService {
     }
 
 
-    public boolean set(final String key, String value,Long expire) {
+    public boolean set(final String key, String value, Long expire) {
         boolean result = false;
         try {
             ValueOperations operations = redisTemplate.opsForValue();
             operations.set(key, value);
-            redisTemplate.expire(key,expire, TimeUnit.SECONDS);
+            redisTemplate.expire(key, expire, TimeUnit.SECONDS);
             result = true;
         } catch (Exception e) {
             log.error("写入redis失败");
@@ -48,24 +47,24 @@ public class RedisService {
         return result;
     }
 
-    public String get(String key){
-        return key == null?null:redisTemplate.opsForValue().get(key);
+    public String get(String key) {
+        return key == null ? null : redisTemplate.opsForValue().get(key);
     }
 
-    public boolean exists(String key){
+    public boolean exists(String key) {
         return redisTemplate.hasKey(key);
     }
 
-    public boolean renameKeyNotExist(String oldkey,String newKey){
-        return redisTemplate.renameIfAbsent(oldkey,newKey);
+    public boolean renameKeyNotExist(String oldkey, String newKey) {
+        return redisTemplate.renameIfAbsent(oldkey, newKey);
     }
 
-    public  void deleteKey(String key){
+    public void deleteKey(String key) {
         redisTemplate.delete(key);
     }
-    
-    public void deleteKeys(String... keys){
-        Set<String> kSet = Stream.of(keys).map(k->k).collect(Collectors.toSet());
+
+    public void deleteKeys(String... keys) {
+        Set<String> kSet = Stream.of(keys).map(k -> k).collect(Collectors.toSet());
         redisTemplate.delete(kSet);
     }
 

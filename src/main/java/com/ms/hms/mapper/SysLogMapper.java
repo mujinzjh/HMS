@@ -2,7 +2,6 @@ package com.ms.hms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ms.hms.entity.SysLog;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;

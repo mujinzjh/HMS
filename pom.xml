@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -44,7 +44,7 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.47</version>
         </dependency>
-<!--      集成AOP-->
+        <!--      集成AOP-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -70,6 +70,25 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--        集成swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <!-- swagger-ui -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <!--在引用时请在maven中央仓库搜索2.X最新版本号-->
+            <version>2.0.9</version>
+        </dependency>
 
         <!--集成redis-->
         <dependency>
@@ -78,7 +97,7 @@
             <version>2.3.9.RELEASE</version>
         </dependency>
 
-<!--        引入某些公共方法-->
+        <!--        引入某些公共方法-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -102,16 +121,16 @@
             </plugin>
         </plugins>
         <resources>
-        <resource>
-            <directory>src/main/java</directory>
-            <includes>
-                <include>**/*.xml</include>
-            </includes>
-        </resource>
-        <resource>
-            <directory>src/main/resources</directory>
-            <filtering>true</filtering>
-        </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
         </resources>
     </build>
 
