@@ -35,6 +35,9 @@ public class MenuDo {
     @TableField(value = "path")
     private String path;
 
+    @TableField(value = "icon")
+    private String icon;
+
     @TableField(value = "status")
     private Integer status;
 
