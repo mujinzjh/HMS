@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @TableName(value = "tb_sys_user_role_relation")
-public class SysUserRole {
+public class SysUserRole implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 

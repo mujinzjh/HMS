@@ -3,17 +3,32 @@
 <mapper namespace="com.ms.hms.mapper.SysRoleMapper">
     <select id="getRoleCount" resultType="Integer">
         select count(*) from tb_sys_role
+        where status = 1
         <if test="name!=null and name != ''">
-            where name = #{name}
+            and name = #{name}
         </if>
     </select>
 
     <select id="getRoleList" resultType="SysRole">
-        select * from tb_sys_role
+        select * from tb_sys_role tsr
+        where tsr.status = 1
         <if test="name != null and name !=''">
-            where name = #{name}
+            and tsr.name = #{name}
         </if>
-        order by tb_sys_role.create_time
+        order by tsr.create_time
         limit #{offset},#{pageSize}
+    </select>
+
+    <update id="update">
+        update tb_sys_role
+        set `status` = #{status}
+        where id = #{id}
+    </update>
+
+    <select id="findRoleByRoleId">
+        select *
+        from tb_sys_role tsr
+                 inner join tb_sys_role_menu_relation tsrmr
+                            on tsr.id = tsrmr.role_id WHERE tsr.id = #{roleId}
     </select>
 </mapper>

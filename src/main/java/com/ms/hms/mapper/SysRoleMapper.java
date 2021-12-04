@@ -11,4 +11,8 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
     int getRoleCount(Map searchMap);
 
     List<SysRole> getRoleList(Map searchMap);
+
+    SysRole findRoleByRoleId(Long roleId);
+
+    void update(SysRole sysRole);
 }

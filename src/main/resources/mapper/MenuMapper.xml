@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ms.hms.mapper.MenuMapper">
     <select id="queryMenuByUserId" resultType="MenuDo">
-        select distinct tsm.id, tsm.`name`, tsm.parent_id as pId, tsm.`type`, tsm.permission, tsm.path, tsm.icon
+        select distinct tsm.id, tsm.`name`, tsm.parent_id as pid, tsm.`type`, tsm.permission, tsm.path, tsm.icon
         from tb_sys_menu tsm
                  inner join tb_sys_role_menu_relation tsrmr on tsm.id = tsrmr.menu_id
                  inner join tb_sys_role tsr on tsrmr.role_id = tsr.id
@@ -10,4 +10,11 @@
         where tsurr.user_id = #{userId}
           and tsm.status = 1;
     </select>
+
+    <select id="getExceptSystemMenus" resultType="MenuDo">
+        select id, name, permission, path, icon, parent_id as pid, sort, type, status, create_time
+        from tb_sys_menu where id !=2 and parent_id !=2;
+    </select>
+
+
 </mapper>

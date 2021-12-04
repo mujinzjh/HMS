@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface MenuMapper extends BaseMapper<MenuDo> {
     List<MenuDo> queryMenuByUserId(Long userId);
+
+    List<MenuDo> getExceptSystemMenus();
 }

@@ -92,14 +92,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     public Map<Long, MenuDo> queryMenuByUserId(Long userId) {
         List<MenuDo> menuList = menuMapper.queryMenuByUserId(userId);
         Map<Long, MenuDo> menuMap = menuList.stream().collect(Collectors.toMap(MenuDo::getId, menu -> menu));
-        menuList.stream().filter(menu -> menu.getPId() != 0L).forEach(menu -> {
+        menuList.stream().filter(menu -> menu.getPid() != 0L).forEach(menu -> {
             setMenuChild(menuMap, menu);
         });
-        return menuMap.values().stream().filter(menu -> menu.getPId() == 0L).collect(Collectors.toMap(MenuDo::getId, menu -> menu));
+        return menuMap.values().stream().filter(menu -> menu.getPid() == 0L).collect(Collectors.toMap(MenuDo::getId, menu -> menu));
     }
 
     private void setMenuChild(Map<Long, MenuDo> menuMap, MenuDo menu) {
-        MenuDo parentFunc = menuMap.get(menu.getPId());
+        MenuDo parentFunc = menuMap.get(menu.getPid());
         if (null != parentFunc) {
             List<MenuDo> menus = parentFunc.getChildren();
             if (null == menus) {
@@ -108,7 +108,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
             menus.add(menu);
             parentFunc.setChildren(menus);
             menuMap.put(parentFunc.getId(), parentFunc);
-            if (parentFunc.getPId() != 0L) {
+            if (parentFunc.getPid() != 0L) {
                 setMenuChild(menuMap, parentFunc);
             }
         }
