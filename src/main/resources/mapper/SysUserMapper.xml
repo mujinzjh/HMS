@@ -8,4 +8,41 @@
         where id = #{id};
     </update>
 
+    <select id="getUserCount" resultType="Integer">
+        select count(*) from tb_user
+        <if test="name!=null and name != ''">
+            where username = #{name}
+        </if>
+    </select>
+
+
+    <select id="getRoleList" resultType="SysUser">
+        select * from tb_user tu
+        <if test="name != null and name !=''">
+            where tu.username = #{name}
+        </if>
+        order by tu.create_time
+        <if test="offset >= 0 and pageSize >=0 ">
+            limit #{offset},#{pageSize}
+        </if>
+    </select>
+
+    <update id="updateUser">
+        update tb_user
+        set update_time = ${currentTimeMillis}
+        <if test="username != null and username != ''">
+            ,username = ${username}
+        </if>
+        <if test="avatar != null and avatar != ''">
+            ,`avatar` = ${avatar}
+        </if>
+        <if test="des != null and des != ''">
+            ,`des` = ${des}
+        </if>
+        <if test="email != null and email != ''">
+            ,`email` = ${email}
+        </if>
+        where id = ${id}
+    </update>
+
 </mapper>

@@ -19,7 +19,7 @@
         limit #{offset},#{pageSize}
     </select>
 
-    <update id="update">
+    <update id="updateRole">
         update tb_sys_role
         set `status` = #{status}
         where id = #{id}
@@ -29,6 +29,7 @@
         select *
         from tb_sys_role tsr
                  inner join tb_sys_role_menu_relation tsrmr
-                            on tsr.id = tsrmr.role_id WHERE tsr.id = #{roleId}
+                            on tsr.id = tsrmr.role_id
+        WHERE tsr.id = #{roleId}
     </select>
 </mapper>

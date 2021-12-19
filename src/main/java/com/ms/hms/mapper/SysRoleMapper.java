@@ -14,5 +14,6 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     SysRole findRoleByRoleId(Long roleId);
 
-    void update(SysRole sysRole);
+
+    void updateRole(SysRole sysRole);
 }

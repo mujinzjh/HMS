@@ -46,7 +46,7 @@ public class RoleController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return roleService.addRole(addRole.getName(), addRole.getMenuIds());
+        return roleService.addRole(addRole);
     }
 
 

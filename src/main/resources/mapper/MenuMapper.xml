@@ -12,8 +12,19 @@
     </select>
 
     <select id="getExceptSystemMenus" resultType="MenuDo">
-        select id, name, permission, path, icon, parent_id as pid, sort, type, status, create_time
-        from tb_sys_menu where id !=2 and parent_id !=2;
+        select id,
+               name,
+               permission,
+               path,
+               icon,
+               parent_id as pid,
+               sort,
+               type,
+               status,
+               create_time
+        from tb_sys_menu
+        where id != 2
+          and parent_id != 2;
     </select>
 
 

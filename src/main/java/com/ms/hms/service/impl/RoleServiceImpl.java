@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ms.hms.common.PageModel;
 import com.ms.hms.common.result.R;
+import com.ms.hms.entity.Param.AddRole;
 import com.ms.hms.entity.Param.RoleInfo;
 import com.ms.hms.entity.SysRole;
 import com.ms.hms.entity.SysRoleMenu;
@@ -16,7 +17,10 @@ import com.ms.hms.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoleServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRoleMenu> implements RoleService {
@@ -53,37 +57,48 @@ public class RoleServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRoleMenu>
     }
 
     @Override
-    public R addRole(String name, String menuIds) {
-        SysRole sysRole = new SysRole();
-        sysRole.setName(name);
-        sysRole.setCreateTime(System.currentTimeMillis());
-        System.out.println(sysRole);
-        sysRoleMapper.insert(sysRole);
-        addRoleMenuRelation(sysRole.getId(), menuIds.split(","));
+    public R addRole(AddRole addRole) {
+        if (null == addRole.getId()) {
+            SysRole sysRole = new SysRole();
+            sysRole.setName(addRole.getName());
+            sysRole.setCreateTime(System.currentTimeMillis());
+            sysRoleMapper.insert(sysRole);
+            addRoleMenuRelation(sysRole.getId(), addRole.getMenuIds().split(","));
+        } else {
+            Integer record = sysRoleMapper.update(null,Wrappers.<SysRole>lambdaUpdate().set(SysRole::getName,addRole.getName()).eq(SysRole::getId,addRole.getId()));
+
+            if (record != 0 ) {
+                sysRoleMenuMapper.delete(Wrappers.<SysRoleMenu>lambdaQuery().eq(SysRoleMenu::getRoleId, addRole.getId()));
+                addRoleMenuRelation(addRole.getId(), addRole.getMenuIds().split(","));
+            } else {
+                throw new ServiceException(ExceptionCode.ROLE_NOT_EXIST);
+            }
+
+        }
         return R.ok();
     }
 
     @Override
     public RoleInfo findRoleByRoleId(Long roleId) {
-       SysRole sysRole = sysRoleMapper.selectOne(Wrappers.<SysRole>lambdaQuery().eq(SysRole::getId,roleId));
-       if(sysRole == null){
-           return null;
-       }
-       List<SysRoleMenu> roleMenuList = sysRoleMenuMapper.selectList(Wrappers.<SysRoleMenu>lambdaQuery().eq(SysRoleMenu::getRoleId,roleId));
+        SysRole sysRole = sysRoleMapper.selectOne(Wrappers.<SysRole>lambdaQuery().eq(SysRole::getId, roleId));
+        if (sysRole == null) {
+            return null;
+        }
+        List<SysRoleMenu> roleMenuList = sysRoleMenuMapper.selectList(Wrappers.<SysRoleMenu>lambdaQuery().eq(SysRoleMenu::getRoleId, roleId));
 
-       StringBuilder menuIds = new StringBuilder();
-       if (roleMenuList != null && roleMenuList.size()>0) {
-           for (SysRoleMenu sysRoleMenu:roleMenuList) {
-               menuIds.append(sysRoleMenu.getMenuId()).append(",");
-           }
-       }
+        StringBuilder menuIds = new StringBuilder();
+        if (roleMenuList != null && roleMenuList.size() > 0) {
+            for (SysRoleMenu sysRoleMenu : roleMenuList) {
+                menuIds.append(sysRoleMenu.getMenuId()).append(",");
+            }
+        }
 
-       RoleInfo roleInfo = new RoleInfo();
-       roleInfo.setId(roleId);
-       roleInfo.setName(sysRole.getName());
-       roleInfo.setMenuIds(menuIds.toString());
-       roleInfo.setUpdateTime(String.valueOf(System.currentTimeMillis()));
-       return roleInfo;
+        RoleInfo roleInfo = new RoleInfo();
+        roleInfo.setId(roleId);
+        roleInfo.setName(sysRole.getName());
+        roleInfo.setMenuIds(menuIds.toString());
+        roleInfo.setUpdateTime(String.valueOf(System.currentTimeMillis()));
+        return roleInfo;
     }
 
     @Override
@@ -93,7 +108,7 @@ public class RoleServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRoleMenu>
             throw new ServiceException(ExceptionCode.ROLE_NOT_EXIST);
         }
         sysRole.setStatus(SysRole.Status.DELETE.code);
-        sysRoleMapper.update(sysRole);
+        sysRoleMapper.updateRole(sysRole);
     }
 
     public void addRoleMenuRelation(Long roleId, String[] menuIds) {
