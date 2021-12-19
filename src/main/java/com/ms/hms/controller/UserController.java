@@ -35,4 +35,13 @@ public class UserController {
         }
         return userService.getUserListInfo(pageNo, pageSize, search);
     }
+
+    @DeleteMapping(value = "/del")
+    public R delUser(Long id){
+        if (id == null ){
+            throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
+        }
+        return userService.delUser(id);
+    }
+
 }

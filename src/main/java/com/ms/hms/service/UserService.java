@@ -22,4 +22,6 @@ public interface UserService extends IService<SysUser> {
     Map<Long, MenuDo> queryMenuByUserId(Long userId);
 
     R getUserListInfo(Integer pageNo, Integer pageSize, String search);
+
+    R delUser(Long id);
 }

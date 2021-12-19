@@ -20,14 +20,11 @@ public class LogController {
     @Autowired
     private SysLogService sysLogService;
 
-    @Log(value = "查询日志")
     @GetMapping(value = "/sysLog")
     public R getSysLogList(@RequestParam(defaultValue = "1") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam("search") String search) throws UnsupportedEncodingException {
         if (pageNo == null || pageSize == null || StringUtils.isBlank(search)) {
             throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
         }
-//        String searchStr = URLDecoder.decode(search,"utf8");
-//        System.out.println(searchStr);
         return sysLogService.getSysLog(pageNo, pageSize, search);
     }
 }

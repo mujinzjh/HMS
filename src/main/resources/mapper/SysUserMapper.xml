@@ -17,7 +17,9 @@
 
 
     <select id="getRoleList" resultType="SysUser">
-        select * from tb_user tu
+        select distinct tu.username,tu.create_time,tu.des,tu.email,tu.id,tsurr.role_id,tsr.name as roleName from tb_user tu
+            inner join tb_sys_user_role_relation tsurr on tu.id = tsurr.user_id
+            inner join tb_sys_role tsr on tsurr.role_id = tsr.id
         <if test="name != null and name !=''">
             where tu.username = #{name}
         </if>
@@ -29,20 +31,20 @@
 
     <update id="updateUser">
         update tb_user
-        set update_time = ${currentTimeMillis}
+        set update_time = #{currentTimeMillis}
         <if test="username != null and username != ''">
-            ,username = ${username}
+            ,`username`= #{username}
         </if>
         <if test="avatar != null and avatar != ''">
-            ,`avatar` = ${avatar}
+            ,`avatar` = #{avatar}
         </if>
         <if test="des != null and des != ''">
-            ,`des` = ${des}
+            ,`des` = #{des}
         </if>
         <if test="email != null and email != ''">
-            ,`email` = ${email}
+            ,`email` = #{email}
         </if>
-        where id = ${id}
+        where id = #{id}
     </update>
 
 </mapper>

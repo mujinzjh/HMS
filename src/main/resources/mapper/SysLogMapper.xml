@@ -12,7 +12,7 @@
 
     <select id="getSysLogList" resultType="SysLog">
         select * from tb_sys_log
-        where status = 2
+        where status = #{status}
         <if test="operation_time != null and operation_time > 0">
             and operation_time = #{operation_time}
         </if>

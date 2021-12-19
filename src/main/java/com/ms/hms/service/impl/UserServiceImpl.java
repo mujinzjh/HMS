@@ -66,6 +66,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         }
     }
 
+//   删除用户
+    @Override
+    public R delUser(Long id){
+        userMapper.deleteById(id);
+        sysUserRoleMapper.delete(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId,id));
+        return R.ok();
+    }
+
     @Override
     public R createUser(UserParam userParam, String defaultPwd) {
         if (userParam.getId() == null) {
@@ -94,7 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
             }
         } else {
             try {
-                userMapper.updateUser(userParam.getId(),userParam.getAvatar(),userParam.getDes(),userParam.getEmail(),String.valueOf(userParam.getUsername()),System.currentTimeMillis());
+                userMapper.updateUser(userParam.getId(),userParam.getAvatar(),userParam.getDes(),userParam.getEmail(),userParam.getUsername(),System.currentTimeMillis());
             } catch (Exception e) {
                 e.printStackTrace();
             }
