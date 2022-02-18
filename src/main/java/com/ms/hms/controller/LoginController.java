@@ -74,6 +74,7 @@ public class LoginController {
     }
 
     //修改密码
+    @Log(value = "退出登录")
     @PostMapping(value = "/logOut")
     public R loginOut() {
         SysUser user = TokenInterceptor.THREAD_LOCAL.get();
