@@ -50,7 +50,7 @@ public class AopAspect {
             return obj;
         } catch (Exception e) {
             e.printStackTrace();
-            result = e.getMessage();
+            result = e.getMessage()!=null ? e.getMessage() : "失败";
             throw e;
         } finally {
             saveSysLog(point, result);
@@ -78,11 +78,17 @@ public class AopAspect {
         if (methodName.equalsIgnoreCase("login")) {
             LoginParam loginParam = (LoginParam) args[0];
             user = userService.findByName(loginParam.getAccount());
-            sysLog.setUsername(user.getUsername());
+            if (user!=null) {
+                sysLog.setUsername(user.getUsername());
+            } else  {
+                sysLog.setUsername("");
+            }
+
         } else {
             user = TokenInterceptor.THREAD_LOCAL.get();
+            sysLog.setUsername(user.getUsername());
         }
-        sysLog.setUsername(user.getUsername());
+
 
         if (methodName.equalsIgnoreCase("login") || methodName.equalsIgnoreCase("logOut")) {
             sysLog.setStatus(Constants.LOGIN_LOG);
