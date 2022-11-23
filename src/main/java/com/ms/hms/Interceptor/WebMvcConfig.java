@@ -8,15 +8,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Bean
-    public TokenInterceptor getTokenInterceptor() {
-        return new TokenInterceptor();
-    }
+  @Bean
+  public TokenInterceptor getTokenInterceptor() {
+    return new TokenInterceptor();
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getTokenInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/doc.html/**", "/login");
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(getTokenInterceptor()).addPathPatterns("/**")
+        .excludePathPatterns("/login")
+        .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/doc.html/**", "/login");
+  }
 }
