@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property file="/home/zjh/conf/common/logback.properties" />
+<!--    <property name="MaxParamLength" value="${param.length.max}"/>-->
+<!--    <property name="MaxArraySize" value="${param.arraysize.max}"/>-->
+<!--    <property name="Levels" value="${param.truncate.levels}"/>-->
+
+    <!--    <turboFilter class="com.xdja.common.logger.filter.LogTruncateFilter" >-->
+<!--        <MaxParamLength>${param.length.max}</MaxParamLength>-->
+<!--        <MaxArraySize>${param.arraysize.max}</MaxArraySize>-->
+<!--        <Levels>${param.truncate.levels}</Levels>-->
+<!--    </turboFilter>-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>System.out</Target>
+        <encoder>
+            <pattern>${stdout.pattern}</pattern>
+            <charset class="java.nio.charset.Charset">${stdout.charset}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${stdout.level}</level>
+        </filter>
+    </appender>
+    <appender name="NORMAL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${normal.file}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${normal.fileNamePattern}</fileNamePattern>
+            <maxHistory>${normal.maxHistory}</maxHistory>
+            <maxFileSize>${normal.maxFileSize}</maxFileSize>
+            <totalSizeCap>${normal.totalSizeCap}</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${normal.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${normal.level}</level>
+        </filter>
+    </appender>
+    <appender name="ERROR_LOG"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${error.file}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${error.fileNamePattern}</fileNamePattern>
+            <maxHistory>${error.maxHistory}</maxHistory>
+            <maxFileSize>${error.maxFileSize}</maxFileSize>
+            <totalSizeCap>${error.totalSizeCap}</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${error.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- only log warn/error msg -->
+            <level>${error.level}</level>
+        </filter>
+    </appender>
+
+    <!-- level=trace/debug/info/warn/error/all/off -->
+    <root level="info">
+        <!-- remove 'STDOUT' in Production  -->
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="ERROR_LOG" />
+        <appender-ref ref="NORMAL_LOG" />
+    </root>
+</configuration>

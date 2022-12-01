@@ -29,8 +29,6 @@
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.5.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.5.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.5.6" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.2.6" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-to-slf4j:2.14.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.14.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.32" level="project" />
@@ -105,6 +103,9 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.3.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.3.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.8.3" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.2.3" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
     <orderEntry type="library" name="Maven: io.springfox:springfox-swagger2:2.9.2" level="project" />
     <orderEntry type="library" name="Maven: io.swagger:swagger-annotations:1.5.20" level="project" />
     <orderEntry type="library" name="Maven: io.swagger:swagger-models:1.5.20" level="project" />
@@ -115,7 +116,6 @@
     <orderEntry type="library" name="Maven: io.springfox:springfox-spring-web:2.9.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:20.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml:classmate:1.5.1" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-metadata:1.2.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.mapstruct:mapstruct:1.2.0.Final" level="project" />

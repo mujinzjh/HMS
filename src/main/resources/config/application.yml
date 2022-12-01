@@ -1,0 +1,17 @@
+#数据库配置
+spring:
+  config:
+    additional-location: optional:file:./config/basic/
+    import:
+      - /home/zjh/conf/common/application.properties
+      - application-datasource.yml
+      - application-redis.yml
+
+  #  配置基础路径
+  mvc:
+    servlet:
+      path: /hms
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: ${server.port}
