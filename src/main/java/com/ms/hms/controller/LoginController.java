@@ -52,7 +52,7 @@ public class LoginController {
     }
 
 
-    //    修改密码
+    // 修改密码
     @Log(value = "修改密码")
     @PostMapping(value = "/updatePwd")
     public R updatePwd(@RequestBody UpdatePwd uPwd) {
