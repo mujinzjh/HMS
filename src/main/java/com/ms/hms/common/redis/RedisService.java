@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author zhaojianhua
+ */
 @Service
 @Slf4j
 public class RedisService {
@@ -41,6 +44,7 @@ public class RedisService {
             operations.set(key, value);
             redisTemplate.expire(key, expire, TimeUnit.SECONDS);
             result = true;
+            log.info("写入redis成功");
         } catch (Exception e) {
             log.error("写入redis失败");
         }
