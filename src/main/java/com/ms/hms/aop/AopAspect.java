@@ -3,6 +3,7 @@ package com.ms.hms.aop;
 import com.ms.hms.Interceptor.TokenInterceptor;
 import com.ms.hms.common.Constants;
 import com.ms.hms.common.result.R;
+import com.ms.hms.common.utils.IPUtils;
 import com.ms.hms.entity.LoginParam;
 import com.ms.hms.entity.SysLog;
 import com.ms.hms.entity.SysUser;
@@ -15,7 +16,10 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 @Aspect
@@ -26,6 +30,8 @@ public class AopAspect {
 
     @Autowired
     private UserService userService;
+
+    private final IPUtils ipUtils = new IPUtils();
 
     @Pointcut("@annotation(com.ms.hms.aop.Log)")
     public void logPointCut() {
@@ -61,8 +67,18 @@ public class AopAspect {
     //    @AfterReturning("logPointCut()")
     public void saveSysLog(ProceedingJoinPoint joinPoint, String result) {
         System.out.println("切面。。。。。");
+
         //保存日志
         SysLog sysLog = new SysLog();
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String ipAddress = "未知";
+        String location = "内网";
+        if (request != null) {
+            ipAddress = request.getRemoteAddr();
+            location = ipUtils.getIpPossession(ipAddress);
+        }
+        sysLog.setIp(ipAddress);
+        sysLog.setLocation(location);
 
         //从切面织入点处通过反射机制获取织入点处的方法
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();

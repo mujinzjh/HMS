@@ -16,7 +16,7 @@
         <if test="operation_time != null and operation_time > 0">
             and operation_time = #{operation_time}
         </if>
-        order by tb_sys_log.operation_time
+        order by tb_sys_log.operation_time DESC
         limit #{offset},#{pageSize}
     </select>
 
