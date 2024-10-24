@@ -1,19 +1,36 @@
 package com.ms.hms.common.utils;
 
-import org.lionsoul.ip2region.DataBlock;
-import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbSearcher;
-import org.lionsoul.ip2region.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lionsoul.ip2region.xdb.Searcher;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
-
+@Component
 public class IPUtils {
+  private static final Logger log = LogManager.getLogger(IPUtils.class);
+
+  private static String DB_PATH;
+
+  @Value("${ip2region.location}")
+  public void setIpLocation(String DB_PATH) {
+    IPUtils.DB_PATH = DB_PATH;
+  }
+  private static final ThreadLocal<Searcher> searcherThreadLocal = ThreadLocal.withInitial(() -> {
+    try {
+      return Searcher.newWithFileOnly(DB_PATH);
+    } catch (Exception e) {
+      log.error("初始化 IP 归属地查询失败: {}", e.getMessage());
+      return null;
+    }
+  });
   /**
    * 获取http请求ip
    * @param request
@@ -57,52 +74,35 @@ public class IPUtils {
     return ipAddress;
   }
 
-  public String getCityInfo(String ip)  {
+  public static String getCityInfo(String ip) {
+    Searcher searcher = searcherThreadLocal.get();
+    if (searcher == null) {
+      return null;
+    }
+
     try {
-      String dbPath = Objects.requireNonNull(this.getClass().getClassLoader().getResource("ip2region.db")).getPath();
-      DbSearcher searcher = new DbSearcher(new DbConfig(), dbPath);
-      //查询算法
-      //B-tree, B树搜索（更快）
-      int algorithm = DbSearcher.BTREE_ALGORITHM;
-      //define the method
-      Method method;
-      method = searcher.getClass().getMethod("btreeSearch", String.class);
-      DataBlock dataBlock;
-      if (!Util.isIpAddress(ip)) {
-        System.out.println("Error: Invalid ip address");
-      }
-      dataBlock = (DataBlock) method.invoke(searcher, ip);
-      String ipInfo = dataBlock.getRegion();
-      if (ipInfo != null) {
-        ipInfo = ipInfo.replace("|0", "");
-        ipInfo = ipInfo.replace("0|", "");
-      }
-      return ipInfo;
+      long startTime = System.nanoTime();
+      String region = searcher.search(ip);
+      long cost = TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime);
+      log.info("IP: {}, Region: {}, IO Count: {}, Took: {} μs", ip, region, searcher.getIOCount(), cost);
+      return region;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("IP: {} 获取 IP 归属地错误，错误原因: {}", ip, e.getMessage());
+      return null;
+    } finally {
+      closeSearcher();
     }
-    return null;
   }
-  /**
-   * 获取IP属地
-   * @param ip
-   */
-  public String getIpPossession(String ip) {
-    String cityInfo = getCityInfo(ip);
-    if (cityInfo != null) {
-      cityInfo = cityInfo.replace("|", " ");
-      String[] cityList = cityInfo.split(" ");
-      if (cityList.length > 0) {
-        // 国内的显示到具体的省
-        if ("中国".equals(cityList[0])) {
-          if (cityList.length > 1) {
-            return cityList[0]+"-"+cityList[1]+"-"+cityList[2];
-          }
-        }
-        // 国外显示到国家
-        return cityList[0];
+
+  public static void closeSearcher() {
+    try {
+      Searcher searcher = searcherThreadLocal.get();
+      if (Objects.nonNull(searcher)) {
+        searcher.close();
+        searcherThreadLocal.remove();
       }
+    } catch (Exception e) {
+      log.error("关闭异常", e);
     }
-    return "未知";
   }
 }

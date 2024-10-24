@@ -31,7 +31,6 @@ public class AopAspect {
     @Autowired
     private UserService userService;
 
-    private final IPUtils ipUtils = new IPUtils();
 
     @Pointcut("@annotation(com.ms.hms.aop.Log)")
     public void logPointCut() {
@@ -43,7 +42,6 @@ public class AopAspect {
         String result = null;
         try {
             Object obj = point.proceed();
-
             if (obj != null) {
                 R objR = (R) obj;
                 String statusCode = objR.getCode();
@@ -74,8 +72,8 @@ public class AopAspect {
         String ipAddress = "未知";
         String location = "内网";
         if (request != null) {
-            ipAddress = request.getRemoteAddr();
-            location = ipUtils.getIpPossession(ipAddress);
+            ipAddress = IPUtils.getIpAddr(request);
+            location = IPUtils.getCityInfo(ipAddress);
         }
         sysLog.setIp(ipAddress);
         sysLog.setLocation(location);

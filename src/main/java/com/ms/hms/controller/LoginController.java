@@ -60,7 +60,6 @@ public class LoginController {
             throw new ServiceException(ResultHttpCode.BUSINESS_FAILURE);
         }
         SysUser user = TokenInterceptor.THREAD_LOCAL.get();
-        System.out.println(user);
 
         if (null == user) {
             throw new ServiceException(ResultHttpCode.TOKEN_INVAILD);
@@ -76,12 +75,16 @@ public class LoginController {
     //修改密码
     @Log(value = "退出登录")
     @PostMapping(value = "/logOut")
-    public R loginOut() {
+    public R loginOut(HttpServletRequest request) {
         SysUser user = TokenInterceptor.THREAD_LOCAL.get();
         if (user == null) {
             throw new ServiceException(ResultHttpCode.TOKEN_INVAILD);
         }
-        redisService.deleteKey(token);
+        String tokenHeader = request.getHeader("Token");
+        if (token != null || tokenHeader != null) {
+            token = tokenHeader;
+            redisService.deleteKey(token);
+        }
         return R.ok();
     }
 
