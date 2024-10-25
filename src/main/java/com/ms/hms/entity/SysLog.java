@@ -23,6 +23,10 @@ public class SysLog implements Serializable {
 
     private String result;
 
+    private String ip;
+
+    private String location;
+
     @TableField(value = "operation_time")
     private Long operationTime;
 }

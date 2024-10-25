@@ -1,5 +1,5 @@
 spring:
   redis:
-    database: 0
     host: ${redis.host}
     port: ${redis.port}
+    password: ${redis.password}

@@ -4,7 +4,7 @@ public class Constants {
     public static String BASE_URL = "/hms";//基础结果
 
     //token过期时间
-    public static long USER_TOKEN_EXPIRE =  2;
+    public static long USER_TOKEN_EXPIRE = 2 * 60 * 60;
 
     public static long LOGIN_LOG = 2;
     public static long OPERATION_LOG = 1;
