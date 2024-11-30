@@ -42,4 +42,6 @@ public class SysUser implements Serializable {
     @TableField(value = "admin_type")
     private Long adminType;
 
+    @TableField(value = "status")
+    private Long status;
 }

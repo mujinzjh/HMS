@@ -14,7 +14,11 @@ public interface UserMapper extends BaseMapper<SysUser> {
 
     int getUserCount(Map searchMap);
 
-    List<SysUser> getRoleList(Map searchMap);
+    List<SysUser> getUserList(Map searchMap);
+
+    List<SysUser> getUserData(Map searchMap);
 
     void updateUser(Long id, String avatar, String des, String email, String username, long currentTimeMillis);
+
+    void deleteById(Long id);
 }

@@ -16,7 +16,7 @@
     </select>
 
 
-    <select id="getRoleList" resultType="SysUser">
+    <select id="getUserList" resultType="SysUser">
         select distinct tu.username,tu.create_time,tu.des,tu.email,tu.id,tsurr.role_id,tsr.name as roleName from tb_user tu
             inner join tb_sys_user_role_relation tsurr on tu.id = tsurr.user_id
             inner join tb_sys_role tsr on tsurr.role_id = tsr.id
@@ -28,6 +28,24 @@
             limit #{offset},#{pageSize}
         </if>
     </select>
+
+    <select id="getUserData" resultType="SysUser">
+        select distinct tu.username,tu.avatar,tu.create_time,tu.create_time,tu.update_time, tu.admin_type,tu.des,tu.email,tu.id, tu.status from tb_user tu
+        where tu.status = #{status}
+        <if test="name != null and name !=''">
+            and tu.username = #{name}
+        </if>
+        order by tu.create_time
+        <if test="offset >= 0 and pageSize >=0 ">
+            limit #{offset},#{pageSize}
+        </if>
+    </select>
+
+    <update id="deleteById">
+        update tb_user
+        set status = 1
+        where id = #{id}
+    </update>
 
     <update id="updateUser">
         update tb_user

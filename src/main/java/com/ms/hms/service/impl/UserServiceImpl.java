@@ -140,7 +140,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
 
         searchMap.put("offset", pageModel.getOffset());
         searchMap.put("pageSize", pageSize);
-        list = userMapper.getRoleList(searchMap);
+        list = userMapper.getUserList(searchMap);
+        return R.ok().data(list).ext(pageModel);
+    }
+
+    @Override
+    public R getUserData(Integer pageNo, Integer pageSize, String search) {
+        Map searchMap = null;
+
+        try {
+            searchMap = JSON.parseObject(search);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (null == searchMap) {
+            searchMap = new HashMap<>(1);
+        }
+        List<SysUser> list = new ArrayList<>();
+        int count = userMapper.getUserCount(searchMap);
+        PageModel pageModel = PageModel.newPageModel(pageSize, pageNo, count);
+        if (count <= 0) {
+            return R.ok().data(list).ext(pageModel);
+        }
+
+        searchMap.put("offset", pageModel.getOffset());
+        searchMap.put("pageSize", pageSize);
+        if (searchMap.get("status") == null) {
+            searchMap.put("status", 0);
+        }
+        list = userMapper.getUserData(searchMap);
         return R.ok().data(list).ext(pageModel);
     }
 

@@ -39,6 +39,14 @@ public class UserController {
         return userService.getUserListInfo(pageNo, pageSize, search);
     }
 
+    @GetMapping(value = "/allData")
+    public R getAllUserData(@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize, @RequestParam("search") String search){
+        if (pageNo == null || pageSize == null || StringUtils.isBlank(search)) {
+            throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
+        }
+        return userService.getUserData(pageNo, pageSize, search);
+    }
+
     @DeleteMapping(value = "/del")
     public R delUser(Long id){
         if (id == null ){
