@@ -61,7 +61,9 @@ public class RoleServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRoleMenu>
         if (null == addRole.getId()) {
             SysRole sysRole = new SysRole();
             sysRole.setName(addRole.getName());
+            sysRole.setRoleDesc(addRole.getDesc());
             sysRole.setCreateTime(System.currentTimeMillis());
+            sysRole.setStatus(SysRole.Status.INIT.code);
             sysRoleMapper.insert(sysRole);
             addRoleMenuRelation(sysRole.getId(), addRole.getMenuIds().split(","));
         } else {
@@ -96,6 +98,7 @@ public class RoleServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRoleMenu>
         RoleInfo roleInfo = new RoleInfo();
         roleInfo.setId(roleId);
         roleInfo.setName(sysRole.getName());
+        roleInfo.setRoleDesc(sysRole.getRoleDesc());
         roleInfo.setMenuIds(menuIds.toString());
         roleInfo.setUpdateTime(String.valueOf(System.currentTimeMillis()));
         return roleInfo;
