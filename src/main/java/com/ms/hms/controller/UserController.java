@@ -3,6 +3,7 @@ package com.ms.hms.controller;
 import com.ms.hms.aop.Log;
 import com.ms.hms.common.Constants;
 import com.ms.hms.common.result.R;
+import com.ms.hms.entity.Param.BindParam;
 import com.ms.hms.entity.Param.UserParam;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ServiceException;
@@ -53,6 +54,22 @@ public class UserController {
             throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
         }
         return userService.delUser(id);
+    }
+
+    @PostMapping(value = "/bind")
+    public R userBindRole(@RequestBody BindParam bindParam){
+        if (bindParam.getUserId() == null || bindParam.getRoleId() == null){
+            throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
+        }
+        return userService.userBindRole(bindParam);
+    }
+
+    @PostMapping(value = "/unbind")
+    public R userUnBindRole(Long userRoleId){
+        if (userRoleId == null){
+            throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
+        }
+        return userService.userUnbindRole(userRoleId);
     }
 
 }

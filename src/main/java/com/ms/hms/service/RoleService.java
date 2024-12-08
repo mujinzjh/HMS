@@ -16,4 +16,6 @@ public interface RoleService extends IService<SysRoleMenu> {
     RoleInfo findRoleByRoleId(Long roleId);
 
     void delRole(Long id);
+
+    int getRoleTotal(String search);
 }

@@ -3,6 +3,7 @@ package com.ms.hms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ms.hms.common.result.R;
 import com.ms.hms.entity.MenuDo;
+import com.ms.hms.entity.Param.BindParam;
 import com.ms.hms.entity.Param.UserParam;
 import com.ms.hms.entity.SysUser;
 
@@ -26,4 +27,10 @@ public interface UserService extends IService<SysUser> {
     R getUserData(Integer pageNo, Integer pageSize, String search);
 
     R delUser(Long id);
+
+    int getUserTotal(String search);
+
+    R userBindRole(BindParam bindParam);
+
+    R userUnbindRole(Long userRoleId);
 }

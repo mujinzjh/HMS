@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Data
 @TableName(value = "tb_sys_log")
@@ -28,5 +29,5 @@ public class SysLog implements Serializable {
     private String location;
 
     @TableField(value = "operation_time")
-    private Long operationTime;
+    private Timestamp operationTime;
 }

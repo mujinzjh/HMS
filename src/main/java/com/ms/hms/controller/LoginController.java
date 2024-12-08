@@ -45,6 +45,9 @@ public class LoginController {
         redisService.set(token, userStr, Constants.USER_TOKEN_EXPIRE);
         Map<String, Object> resultMap = new HashMap<>();
         Map<Long, MenuDo> menus = userService.queryMenuByUserId(user.getId());
+        if (menus.isEmpty()) {
+            throw new ServiceException(ExceptionCode.USER_NOT_BIND_ROLE);
+        }
         resultMap.put("user", user);
         resultMap.put("token", token);
         resultMap.put("menu", menus);

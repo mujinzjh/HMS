@@ -114,6 +114,13 @@ public class RoleServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRoleMenu>
         sysRoleMapper.updateRole(sysRole);
     }
 
+    @Override
+    public int getRoleTotal(String search) {
+        Map searchMap = new HashMap(1);
+        int count = sysRoleMapper.getRoleCount(searchMap);
+        return count;
+    }
+
     public void addRoleMenuRelation(Long roleId, String[] menuIds) {
         List<SysRoleMenu> roleMenuList = new ArrayList<>();
         for (String menuId : menuIds) {

@@ -5,6 +5,7 @@ import com.ms.hms.entity.Param.UserParam;
 import com.ms.hms.entity.SysUser;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public interface UserMapper extends BaseMapper<SysUser> {
 
     List<SysUser> getUserData(Map searchMap);
 
-    void updateUser(Long id, String avatar, String des, String email, String username, long currentTimeMillis);
+    void updateUser(Long id, String des, String email, String username, LocalDateTime currentTimeMillis);
 
     void deleteById(Long id);
 }

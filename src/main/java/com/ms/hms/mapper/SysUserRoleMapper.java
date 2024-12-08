@@ -5,4 +5,5 @@ import com.ms.hms.entity.SysUserRole;
 
 public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
 //    int insertUserRole(@Param("userId") Long userId,@Param("roleId") Long roleId,@Param("createTime") Long createTime);
+  void deleteById(Long id);
 }

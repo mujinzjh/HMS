@@ -20,4 +20,23 @@
         limit #{offset},#{pageSize}
     </select>
 
+    <select id="getVisitorCount" resultType="Integer">
+        SELECT COUNT(DISTINCT username)  FROM tb_sys_log;
+    </select>
+
+    <select id="countUsersByDate" resultType="java.util.Map">
+        SELECT DATE(operation_time) as date, COUNT(DISTINCT username) as user_count
+        from tb_sys_log
+        WHERE operation_time >= #{startDate} AND operation_time &lt; #{endDate}
+        GROUP BY date
+    </select>
+
+    <select id="countUsersByYear" resultType="java.util.Map">
+        SELECT DATE_FORMAT(operation_time,'%Y-%m')  as date, COUNT(DISTINCT username) as user_count
+        from tb_sys_log
+        WHERE operation_time >= #{startDate} AND operation_time &lt; #{endDate}
+        GROUP BY date
+    </select>
+
+
 </mapper>

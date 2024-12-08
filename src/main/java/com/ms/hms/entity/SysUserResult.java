@@ -9,11 +9,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @TableName(value = "tb_user")
-public class SysUser implements Serializable {
+public class SysUserResult implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -43,4 +42,8 @@ public class SysUser implements Serializable {
 
     @TableField(value = "status")
     private Long status;
+
+    private long isCited;
+
+    private long userRoleId;
 }

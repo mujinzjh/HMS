@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+
 @SpringBootTest
 class HmsApplicationTests {
 
@@ -15,5 +18,4 @@ class HmsApplicationTests {
     void contextLoads() {
         stringRedisTemplate.opsForValue().append("ms", "hello");
     }
-
 }

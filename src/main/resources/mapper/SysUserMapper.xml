@@ -29,8 +29,11 @@
         </if>
     </select>
 
-    <select id="getUserData" resultType="SysUser">
-        select distinct tu.username,tu.avatar,tu.create_time,tu.create_time,tu.update_time, tu.admin_type,tu.des,tu.email,tu.id, tu.status from tb_user tu
+    <select id="getUserData" resultType="SysUserResult">
+        select distinct tu.username,tu.avatar,tu.create_time,tu.create_time,tu.update_time, tu.admin_type,tu.des,tu.email,tu.id, ot.id AS userRoleId,tu.status,
+        CASE WHEN ot.user_id IS NOT NULL THEN 1 ELSE 0 END AS isCited
+        from tb_user tu
+        left join tb_sys_user_role_relation ot ON tu.id = ot.user_id
         where tu.status = #{status}
         <if test="name != null and name !=''">
             and tu.username = #{name}

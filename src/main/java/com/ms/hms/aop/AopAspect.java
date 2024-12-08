@@ -21,6 +21,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Aspect
 @Component
@@ -119,7 +121,7 @@ public class AopAspect {
         }
 
         //设置操作时间
-        sysLog.setOperationTime(System.currentTimeMillis());
+        sysLog.setOperationTime(new Timestamp(System.currentTimeMillis()));
         //调用service保存SysLog实体类到数据库
         sysLogService.saveLog(sysLog);
     }

@@ -10,10 +10,11 @@ import com.ms.hms.service.SysLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Service
@@ -54,4 +55,74 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         list = sysLogMapper.getSysLogList(searchMap);
         return R.ok().data(list).ext(pageModel);
     }
+
+    @Override
+    public int getVisitUser() {
+
+        return sysLogMapper.getVisitorCount();
+    }
+
+    @Override
+    public List<Map<String, Object>> getUsersByDate(Timestamp startDate, Timestamp endDate) {
+        List<Map<String, Object>> results = sysLogMapper.countUsersByDate(startDate, endDate);
+        LocalDate start = startDate.toLocalDateTime().toLocalDate();
+        LocalDate end = endDate.toLocalDateTime().toLocalDate();
+        List<Map<String, Object>> resultMap = new ArrayList<>();;
+        for (LocalDate date = start; !date.isAfter(end);date = date.plusDays(1)) {
+            resultMap.add(getMapForDate(date, results));
+        }
+        return resultMap;
+    }
+    private static Map<String, Object> getMapForDate(LocalDate date, List<Map<String, Object>> results) {
+        Map<String, Object> map = new HashMap<>();
+        boolean found = false;
+        for (Map<String, Object> result : results) {
+            Date resultDate = (Date) result.get("date");
+            if (resultDate != null && resultDate.toLocalDate().equals(date)) {
+                map.put("date", resultDate);
+                map.put("user_count", result.get("user_count"));
+                found = true;
+                break;
+            }
+
+        }
+        if (!found) {
+            map.put("date", date);
+            map.put("user_count", 0);
+
+        }
+        return map;
+    }
+    @Override
+    public List<Map<String, Object>> getUsersByYear(Timestamp startDate, Timestamp endDate) {
+        List<Map<String, Object>> results = sysLogMapper.countUsersByYear(startDate, endDate);
+        LocalDate start = startDate.toLocalDateTime().toLocalDate();
+        LocalDate end = endDate.toLocalDateTime().toLocalDate();
+        List<Map<String, Object>> resultMap = new ArrayList<>();;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+
+        for (LocalDate date = start; !date.isAfter(end);date = date.plusMonths(1)) {
+            String curDate = formatter.format(date);
+            Map<String, Object> map = new HashMap<>();
+            boolean found = false;
+            for (Map<String, Object> result : results) {
+                String resultDate = (String) result.get("date");
+                if (resultDate != null && resultDate.equals(curDate)) {
+                    map.put("date", resultDate);
+                    map.put("user_count", result.get("user_count"));
+                    found = true;
+                    resultMap.add(map);
+                    break;
+                }
+
+            }
+            if (!found) {
+                map.put("date", curDate);
+                map.put("user_count", 0);
+                resultMap.add(map);
+            }
+        }
+        return resultMap;
+    }
+
 }
