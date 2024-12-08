@@ -35,7 +35,7 @@ public class SysUserResult implements Serializable {
     private LocalDateTime createTime;
 
     @TableField(value = "update_time")
-    private Long updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(value = "admin_type")
     private Long adminType;
@@ -46,4 +46,6 @@ public class SysUserResult implements Serializable {
     private long isCited;
 
     private long userRoleId;
+
+    private long roleId;
 }

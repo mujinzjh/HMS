@@ -30,7 +30,18 @@
     </select>
 
     <select id="getUserData" resultType="SysUserResult">
-        select distinct tu.username,tu.avatar,tu.create_time,tu.create_time,tu.update_time, tu.admin_type,tu.des,tu.email,tu.id, ot.id AS userRoleId,tu.status,
+        select distinct tu.username,
+                        tu.avatar,
+                        tu.create_time,
+                        tu.create_time,
+                        tu.update_time,
+                        tu.admin_type,
+                        tu.des,
+                        tu.email,
+                        tu.id,
+                        ot.id AS userRoleId,
+                        ot.role_id AS roleId,
+                        tu.status,
         CASE WHEN ot.user_id IS NOT NULL THEN 1 ELSE 0 END AS isCited
         from tb_user tu
         left join tb_sys_user_role_relation ot ON tu.id = ot.user_id
@@ -55,9 +66,6 @@
         set update_time = #{currentTimeMillis}
         <if test="username != null and username != ''">
             ,`username`= #{username}
-        </if>
-        <if test="avatar != null and avatar != ''">
-            ,`avatar` = #{avatar}
         </if>
         <if test="des != null and des != ''">
             ,`des` = #{des}

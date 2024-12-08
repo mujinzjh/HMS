@@ -36,7 +36,7 @@ public class SysUser implements Serializable {
     private LocalDateTime createTime;
 
     @TableField(value = "update_time")
-    private Long updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(value = "admin_type")
     private Long adminType;

@@ -135,14 +135,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            if (userParam.getRoleId() != null) {
-                SysUserRole sysUserRole = sysUserRoleMapper.selectOne(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId,userParam.getId()));
-                if (null != sysUserRole){
-                    if (sysUserRole.getRoleId() != userParam.getRoleId()) {
-                            sysUserRoleMapper.update(null,Wrappers.<SysUserRole>lambdaUpdate().set(SysUserRole::getRoleId,userParam.getRoleId()).eq(SysUserRole::getId,sysUserRole.getId()));
-                    }
+            SysUserRole sysUserRole = sysUserRoleMapper.selectOne(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId,userParam.getId()));
+            if (null != sysUserRole){
+                if (sysUserRole.getRoleId() != userParam.getRoleId()) {
+                    sysUserRoleMapper.update(null,Wrappers.<SysUserRole>lambdaUpdate().set(SysUserRole::getRoleId,userParam.getRoleId()).eq(SysUserRole::getId,sysUserRole.getId()));
                 }
+            } else {
+                SysUserRole addSysUserRole = new SysUserRole();
+                addSysUserRole.setRoleId(userParam.getRoleId());
+                addSysUserRole.setUserId(userParam.getId());
+                addSysUserRole.setCreateTime(LocalDateTime.now());
+                sysUserRoleMapper.insert(addSysUserRole);
             }
         }
 
