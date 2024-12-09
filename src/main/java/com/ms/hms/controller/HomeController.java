@@ -1,10 +1,12 @@
 package com.ms.hms.controller;
 
+import com.ms.hms.aop.Log;
 import com.ms.hms.common.result.R;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ServiceException;
 import com.ms.hms.service.RoleService;
 import com.ms.hms.service.SysLogService;
+import com.ms.hms.service.UserRoleService;
 import com.ms.hms.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,10 @@ public class HomeController {
   private SysLogService sysLogService;
   @Autowired
   private RoleService roleService;
+  @Autowired
+  private UserRoleService userRoleService;
+
+
 
 
   @GetMapping(value = "/total")
@@ -48,7 +54,6 @@ public class HomeController {
     resultMap.put("visit",visitCount);
     return R.ok().data(resultMap);
   }
-
   @GetMapping(value = "/visitNum")
   public R getVisitNumber(Integer type) throws UnsupportedEncodingException {
     List<Map<String, Object>> result = new ArrayList<>();
@@ -77,6 +82,12 @@ public class HomeController {
     } else {
       result = sysLogService.getUsersByDate(startTimestamp, endTimestamp);
     }
+    return R.ok().data(result);
+  }
+
+  @GetMapping(value = "/roleSituation")
+  public R getRoleSituation() throws UnsupportedEncodingException {
+    List<Map<String, Object>> result = userRoleService.getRoleSituationCount();
     return R.ok().data(result);
   }
 }
