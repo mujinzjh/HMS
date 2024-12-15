@@ -6,6 +6,7 @@ spring:
       - /home/zjh/conf/common/application.properties
       - application-datasource.yml
       - application-redis.yml
+      - application-oss.yml
 
   #  配置基础路径
   mvc:

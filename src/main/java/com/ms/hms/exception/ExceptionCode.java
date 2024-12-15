@@ -16,7 +16,10 @@ public enum ExceptionCode implements BaseR {
     PARAMTER_ERROR("10006", "param error", ""),
     ROLE_NOT_EXIST("10007","not exist","角色不存在"),
     ACCOUNT_OR_PASSWORD_ERROR("10005", "pwd error", "密码错误"),
-    USER_NOT_BIND_ROLE("10008", "not bind", "用户未绑定角色");
+    USER_NOT_BIND_ROLE("10008", "not bind", "用户未绑定角色"),
+    PART_UPLOAD_FAIL("10009", "part upload failed", "上传文件分片失败"),
+    FILE_UPLOAD_FAIL("10010", "upload file failed", "上传文件失败"),
+    MERGE_FILE_FAIL("10011", "merge file failed", "合并文件失败");
 
     private final String code;
     private final String msg;

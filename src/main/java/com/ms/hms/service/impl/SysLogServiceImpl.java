@@ -67,8 +67,8 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         List<Map<String, Object>> results = sysLogMapper.countUsersByDate(startDate, endDate);
         LocalDate start = startDate.toLocalDateTime().toLocalDate();
         LocalDate end = endDate.toLocalDateTime().toLocalDate();
-        List<Map<String, Object>> resultMap = new ArrayList<>();;
-        for (LocalDate date = start; !date.isAfter(end);date = date.plusDays(1)) {
+        List<Map<String, Object>> resultMap = new ArrayList<>();
+      for (LocalDate date = start; !date.isAfter(end);date = date.plusDays(1)) {
             resultMap.add(getMapForDate(date, results));
         }
         return resultMap;
@@ -98,8 +98,8 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         List<Map<String, Object>> results = sysLogMapper.countUsersByYear(startDate, endDate);
         LocalDate start = startDate.toLocalDateTime().toLocalDate();
         LocalDate end = endDate.toLocalDateTime().toLocalDate();
-        List<Map<String, Object>> resultMap = new ArrayList<>();;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        List<Map<String, Object>> resultMap = new ArrayList<>();
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
 
         for (LocalDate date = start; !date.isAfter(end);date = date.plusMonths(1)) {
             String curDate = formatter.format(date);
