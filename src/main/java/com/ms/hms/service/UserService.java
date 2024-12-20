@@ -6,6 +6,7 @@ import com.ms.hms.entity.MenuDo;
 import com.ms.hms.entity.Param.BindParam;
 import com.ms.hms.entity.Param.UserParam;
 import com.ms.hms.entity.SysUser;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -17,6 +18,8 @@ public interface UserService extends IService<SysUser> {
     void updatePwd(Long id, String password);
 
     void insertUser(SysUser sysUser);
+
+    int updateAvatar(SysUser sysUser);
 
     R createUser(UserParam userParam, String defaultPwd);
 
@@ -33,4 +36,6 @@ public interface UserService extends IService<SysUser> {
     R userBindRole(BindParam bindParam);
 
     R userUnbindRole(Long userRoleId);
+
+    void batchImport(MultipartFile file);
 }

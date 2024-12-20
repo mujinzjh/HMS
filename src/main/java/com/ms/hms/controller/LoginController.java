@@ -14,13 +14,16 @@ import com.ms.hms.entity.UpdatePwd;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ResultHttpCode;
 import com.ms.hms.exception.ServiceException;
+import com.ms.hms.service.OSSService;
 import com.ms.hms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +35,11 @@ public class LoginController {
     private UserService userService;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private OSSService ossService;
+
+    @Value("${aliyun.bucketName}")
+    private String bucketName;
 
     @Log(value = "登录")
     @PostMapping(value = "/login")
@@ -47,6 +55,10 @@ public class LoginController {
         Map<Long, MenuDo> menus = userService.queryMenuByUserId(user.getId());
         if (menus.isEmpty()) {
             throw new ServiceException(ExceptionCode.USER_NOT_BIND_ROLE);
+        }
+        if (user.getAvatar() != null) {
+            URL url = ossService.getFileUrl(user.getAvatar(),bucketName);
+            user.setAvatar(String.valueOf(url));
         }
         resultMap.put("user", user);
         resultMap.put("token", token);
@@ -90,7 +102,7 @@ public class LoginController {
         }
         return R.ok();
     }
-
+    @Log(value = "获取用户访问数量")
     @PostMapping(value = "/add")
     public R insertUser() {
         SysUser sysUser = new SysUser();

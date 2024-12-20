@@ -19,7 +19,9 @@ public enum ExceptionCode implements BaseR {
     USER_NOT_BIND_ROLE("10008", "not bind", "用户未绑定角色"),
     PART_UPLOAD_FAIL("10009", "part upload failed", "上传文件分片失败"),
     FILE_UPLOAD_FAIL("10010", "upload file failed", "上传文件失败"),
-    MERGE_FILE_FAIL("10011", "merge file failed", "合并文件失败");
+    MERGE_FILE_FAIL("10011", "merge file failed", "合并文件失败"),
+
+    BATCH_FILE_FORMAT_FAIL("20000", "batch file  format error", "文件格式错误");
 
     private final String code;
     private final String msg;

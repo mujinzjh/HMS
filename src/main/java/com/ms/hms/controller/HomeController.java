@@ -42,7 +42,7 @@ public class HomeController {
 
 
 
-
+  @Log(value = "获取首页总数")
   @GetMapping(value = "/total")
   public R getTotalCount() throws UnsupportedEncodingException {
     Map<String, Object> resultMap = new HashMap<>();
@@ -54,6 +54,7 @@ public class HomeController {
     resultMap.put("visit",visitCount);
     return R.ok().data(resultMap);
   }
+  @Log(value = "获取用户访问数量")
   @GetMapping(value = "/visitNum")
   public R getVisitNumber(Integer type) throws UnsupportedEncodingException {
     List<Map<String, Object>> result = new ArrayList<>();
@@ -85,6 +86,7 @@ public class HomeController {
     return R.ok().data(result);
   }
 
+  @Log(value = "获取角色使用数")
   @GetMapping(value = "/roleSituation")
   public R getRoleSituation() throws UnsupportedEncodingException {
     List<Map<String, Object>> result = userRoleService.getRoleSituationCount();

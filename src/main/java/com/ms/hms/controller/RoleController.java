@@ -59,7 +59,7 @@ public class RoleController {
         roleService.delRole(id);
         return R.ok();
     }
-
+    @Log(value = "获取角色信息")
     @GetMapping(value = "/info")
     public R findRoleByRoleId(Long roleId){
 

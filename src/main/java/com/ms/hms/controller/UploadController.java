@@ -3,6 +3,7 @@ package com.ms.hms.controller;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.*;
+import com.ms.hms.aop.Log;
 import com.ms.hms.common.result.R;
 import com.ms.hms.common.utils.FileUtils;
 import com.ms.hms.entity.Param.MergeParam;
@@ -34,7 +35,7 @@ public class UploadController {
 
   @Value("${aliyun.bucketName}")
   private String bucketName;
-
+  @Log(value = "分片上传")
   @GetMapping("/getUploadId")
   public R getUploadId(String fileName) {
     String filePath = FileUtils.getFullPath(fileName);
@@ -67,7 +68,7 @@ public class UploadController {
     }
   }
 
-
+  @Log(value = "文件上传")
   @PostMapping("/uploadFile")
   public R uploadFile(@RequestParam("file") MultipartFile file) {
     try {

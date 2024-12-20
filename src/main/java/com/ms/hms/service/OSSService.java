@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,9 +66,31 @@ public class OSSService {
     }
   }
 
-  public void uploadFile(InputStream inputStream, String filePath, String bucketName){
+  public PutObjectResult uploadFile(InputStream inputStream, String filePath, String bucketName){
     PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, filePath, inputStream);
     // 创建PutObject请求。
-    PutObjectResult result = ossClient.putObject(putObjectRequest);
+    return ossClient.putObject(putObjectRequest);
+  }
+
+  public void deleteFile(String filePath, String bucketName){
+    ossClient.deleteObject(bucketName, filePath);
+  }
+
+  public byte[] getFileContent(String filePath, String bucketName) throws IOException {
+    OSSObject ossObject = ossClient.getObject(bucketName, filePath);
+    InputStream inputStream = ossObject.getObjectContent();
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    byte[] readBuffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = inputStream.read(readBuffer)) != -1) {
+      byteArrayOutputStream.write(readBuffer, 0, bytesRead);
+    }
+    return byteArrayOutputStream.toByteArray();
+  }
+
+  public URL getFileUrl(String filePath, String bucketName){
+    Date expiration = new Date(new Date().getTime() + 3600 * 1000L);
+    // 生成以GET方法访问的签名URL。本示例没有额外请求头，其他人可以直接通过浏览器访问相关内容。
+    return ossClient.generatePresignedUrl(bucketName, filePath, expiration);
   }
 }

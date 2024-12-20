@@ -2,6 +2,7 @@ package com.ms.hms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ms.hms.common.PageModel;
@@ -18,7 +19,9 @@ import com.ms.hms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +58,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         userMapper.insert(user);
     }
 
-    @Transactional
+  @Override
+  public int updateAvatar(SysUser sysUser) {
+      UpdateWrapper<SysUser> wrapper=new UpdateWrapper<>();
+      wrapper.set("avatar",sysUser.getAvatar()).set("update_time", new Timestamp(System.currentTimeMillis())).eq("id", sysUser.getId());
+      return userMapper.update(null, wrapper);
+  }
+
+  @Transactional
     @Override
     public void updatePwd(Long id, String password) {
         try {
@@ -98,6 +108,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     public R userUnbindRole(Long userRoleId) {
         sysUserRoleMapper.delete(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getId,userRoleId));
         return R.ok();
+    }
+
+    @Override
+    public void batchImport(MultipartFile file) {
+
     }
 
 

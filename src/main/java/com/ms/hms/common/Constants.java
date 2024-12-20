@@ -1,5 +1,8 @@
 package com.ms.hms.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Constants {
     public static String BASE_URL = "/hms";//基础结果
 
@@ -15,5 +18,4 @@ public class Constants {
     public static String DEFAULT_PASSWORD = "111111";
 
     public static String ROOT_FILE_PATH = "hms_data";
-
 }

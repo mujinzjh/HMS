@@ -116,7 +116,7 @@ public class AopAspect {
         if (log != null) {
             String value = log.value();
             //设置操作成功文本
-            sysLog.setResult(value + result);
+            sysLog.setResult(result);
             sysLog.setOperation(value);//保存获取的操作
         }
 

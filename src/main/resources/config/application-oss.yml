@@ -4,4 +4,4 @@ aliyun:
   accessKeySecret: ${aliyun.oss.accessKeySecret}
   bucketName: ${aliyun.oss.bucketName}
   urlPrefix: ${aliyun.oss.urlPrefix}
-  region:  ${aliyun.oss.urlPrefix}
+  region:  ${aliyun.oss.region}
