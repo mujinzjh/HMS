@@ -9,4 +9,8 @@ public interface MenuMapper extends BaseMapper<MenuDo> {
     List<MenuDo> queryMenuByUserId(Long userId);
 
     List<MenuDo> getExceptSystemMenus();
+
+    List<MenuDo> getMenuList();
+
+    List<MenuDo> getBySearch();
 }

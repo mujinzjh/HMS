@@ -26,6 +26,35 @@
         where id != 2
           and parent_id != 2;
     </select>
+    <select id="getMenuList" resultType="MenuDo">
+        select id,
+               name,
+               permission,
+               path,
+               icon,
+               parent_id as pid,
+               sort,
+               type,
+               status,
+               create_time
+        from tb_sys_menu
+        where status = 1;
+    </select>
+    <select id="getBySearch" resultType="MenuDo">
+        select id,
+               name,
+               permission,
+               path,
+               icon,
+               parent_id as pid,
+               sort,
+               type,
+               status,
+               create_time
+        from tb_sys_menu
+        where status = 1 and parent_id = 0;
+    </select>
+
 
 
 </mapper>

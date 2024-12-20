@@ -69,7 +69,7 @@ public class RoleController {
     @Log(value = "获取菜单")
     @GetMapping(value = "/getAllPermissionMenus")
     public R getAllPermissionMenus() {
-        Map<Long, MenuDo> menu = menuService.getAllPermissionMneus();
+        Map<Long, MenuDo> menu = menuService.getAllPermissionMenus();
         List<MenuDo> menus = MapToListUtils.mapToList(menu);
         return R.ok().data(menus);
     }

@@ -109,7 +109,6 @@ public class LoginController {
         sysUser.setUsername("llj");
         sysUser.setPassword("111111");
         sysUser.setAdminType((long) 1);
-
         userService.insertUser(sysUser);
         return R.ok();
     }

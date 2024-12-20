@@ -3,6 +3,7 @@ package com.ms.hms.service;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.*;
 import com.ms.hms.Interceptor.TokenInterceptor;
+import com.ms.hms.common.utils.FileUtils;
 import com.ms.hms.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,10 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class OSSService {
@@ -92,5 +90,34 @@ public class OSSService {
     Date expiration = new Date(new Date().getTime() + 3600 * 1000L);
     // 生成以GET方法访问的签名URL。本示例没有额外请求头，其他人可以直接通过浏览器访问相关内容。
     return ossClient.generatePresignedUrl(bucketName, filePath, expiration);
+  }
+
+  public List<Map<String, Object>> getFileList(String filePath, String bucketName){
+    List<Map<String, Object>> fileList = new ArrayList<>();
+    ListObjectsRequest listObjectsRequest = new ListObjectsRequest(bucketName);
+    // 设置prefix参数来获取fun目录下的所有文件。
+    listObjectsRequest.setPrefix(filePath);
+    listObjectsRequest.setDelimiter("/");
+    ObjectListing list = ossClient.listObjects(listObjectsRequest);
+    System.out.println("=============");
+
+    System.out.println(list);
+    for (OSSObjectSummary objectSummary : list.getObjectSummaries()) {
+      Map<String, Object> resultMap = new HashMap<>();
+      resultMap.put("type", 1);
+      resultMap.put("name", FileUtils.getFileName(objectSummary.getKey()));
+      resultMap.put("path", objectSummary.getKey());
+      resultMap.put("size", FileUtils.getFileSize(objectSummary.getSize()));
+      fileList.add(resultMap);
+    }
+    for (String commonPrefix : list.getCommonPrefixes()) {
+      Map<String, Object> resultMap = new HashMap<>();
+      resultMap.put("type", 0);
+      resultMap.put("name", FileUtils.getDirName(commonPrefix));
+      resultMap.put("path", commonPrefix);
+      resultMap.put("size", 0);
+      fileList.add(resultMap);
+    }
+    return fileList;
   }
 }
