@@ -2,7 +2,6 @@ package com.ms.hms.controller;
 
 import com.ms.hms.aop.Log;
 import com.ms.hms.common.result.R;
-import com.ms.hms.entity.LoginParam;
 import com.ms.hms.entity.MenuDo;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ServiceException;
@@ -10,9 +9,7 @@ import com.ms.hms.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/menu")
@@ -23,10 +20,11 @@ public class MenuController {
 
   @Log(value = "菜单列表")
   @GetMapping(value = "/list")
-  public R getMenuList() {
-    Map<Long, MenuDo> menus = menuService.getAllMenus();
-    Collection<MenuDo> list = menus.values();
-    return R.ok().data(list);
+  public R getMenuList(@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize, @RequestParam("search") String search) {
+    if (pageNo == null || pageSize == null) {
+      throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
+    }
+    return menuService.getAllMenus(pageNo, pageSize, search);
   };
 
   @Log(value = "添加菜单")

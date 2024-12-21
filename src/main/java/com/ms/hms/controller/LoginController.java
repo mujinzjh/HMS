@@ -7,14 +7,12 @@ import com.ms.hms.common.Constants;
 import com.ms.hms.common.redis.RedisService;
 import com.ms.hms.common.result.R;
 import com.ms.hms.common.utils.TokenUtils;
-import com.ms.hms.entity.LoginParam;
-import com.ms.hms.entity.MenuDo;
-import com.ms.hms.entity.SysUser;
-import com.ms.hms.entity.UpdatePwd;
+import com.ms.hms.entity.*;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ResultHttpCode;
 import com.ms.hms.exception.ServiceException;
 import com.ms.hms.service.OSSService;
+import com.ms.hms.service.SysLogService;
 import com.ms.hms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +35,8 @@ public class LoginController {
     private RedisService redisService;
     @Autowired
     private OSSService ossService;
+    @Autowired
+    private SysLogService sysLogService;
 
     @Value("${aliyun.bucketName}")
     private String bucketName;
@@ -60,8 +60,12 @@ public class LoginController {
             URL url = ossService.getFileUrl(user.getAvatar(),bucketName);
             user.setAvatar(String.valueOf(url));
         }
+        SysLog log = sysLogService.getLatestLog("退出登录");
+        long curTimestamp = System.currentTimeMillis();
+        long diffTimestamp = curTimestamp - log.getOperationTime().getTime();
         resultMap.put("user", user);
         resultMap.put("token", token);
+        resultMap.put("diff", diffTimestamp);
         resultMap.put("menu", menus);
         return R.ok().data(resultMap);
     }

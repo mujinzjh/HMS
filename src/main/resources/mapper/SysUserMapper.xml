@@ -41,10 +41,12 @@
                         tu.id,
                         ot.id AS userRoleId,
                         ot.role_id AS roleId,
+                        tsr.name AS roleName,
                         tu.status,
         CASE WHEN ot.user_id IS NOT NULL THEN 1 ELSE 0 END AS isCited
         from tb_user tu
         left join tb_sys_user_role_relation ot ON tu.id = ot.user_id
+        LEFT JOIN tb_sys_role tsr ON ot.role_id = tsr.id
         where tu.status = #{status}
         <if test="name != null and name !=''">
             and tu.username = #{name}

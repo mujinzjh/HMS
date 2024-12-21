@@ -20,8 +20,8 @@ public enum ExceptionCode implements BaseR {
     PART_UPLOAD_FAIL("10009", "part upload failed", "上传文件分片失败"),
     FILE_UPLOAD_FAIL("10010", "upload file failed", "上传文件失败"),
     MERGE_FILE_FAIL("10011", "merge file failed", "合并文件失败"),
-
-
+    GET_FILE_LIST_FAIL("10012", "get file list failed", "获取文件列表失败"),
+    FILE_DELETE_ERROR("10013", "file delete fail", "删除文件失败"),
     BATCH_FILE_FORMAT_FAIL("20000", "batch file  format error", "文件格式错误"),
     DELETE_MENU_FAIL("30000", "delete menu failed", "删除菜单失败"),
     GET_MENU_INFO_FAIL("30001", "get menu info failed", "获取菜单信息失败");

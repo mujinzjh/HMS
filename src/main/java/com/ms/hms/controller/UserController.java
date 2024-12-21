@@ -9,6 +9,7 @@ import com.ms.hms.common.utils.FileUtils;
 import com.ms.hms.entity.Param.BindParam;
 import com.ms.hms.entity.Param.UserParam;
 import com.ms.hms.entity.SysUser;
+import com.ms.hms.entity.SysUserResult;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ServiceException;
 import com.ms.hms.service.OSSService;
@@ -26,6 +27,7 @@ import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhaojianhua
@@ -69,7 +71,14 @@ public class UserController {
         if (pageNo == null || pageSize == null || StringUtils.isBlank(search)) {
             throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
         }
-        return userService.getUserData(pageNo, pageSize, search);
+        Map<String, Object> map = userService.getUserData(pageNo, pageSize, search);
+        List<SysUserResult> resultList = (List<SysUserResult>) map.get("list");
+        for (SysUserResult user : resultList) {
+            if (user.getAvatar() != null) {
+                user.setAvatar(String.valueOf(ossService.getFileUrl(user.getAvatar(), bucketName)));
+            }
+        }
+        return R.ok().ext(map.get("ext")).data(resultList);
     }
     @Log(value = "删除用户")
     @DeleteMapping(value = "/del")

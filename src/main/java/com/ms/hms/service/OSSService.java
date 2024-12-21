@@ -3,6 +3,7 @@ package com.ms.hms.service;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.*;
 import com.ms.hms.Interceptor.TokenInterceptor;
+import com.ms.hms.common.Constants;
 import com.ms.hms.common.utils.FileUtils;
 import com.ms.hms.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +71,8 @@ public class OSSService {
     return ossClient.putObject(putObjectRequest);
   }
 
-  public void deleteFile(String filePath, String bucketName){
-    ossClient.deleteObject(bucketName, filePath);
+  public VoidResult deleteFile(String filePath, String bucketName){
+    return ossClient.deleteObject(bucketName, filePath);
   }
 
   public byte[] getFileContent(String filePath, String bucketName) throws IOException {
@@ -87,7 +88,7 @@ public class OSSService {
   }
 
   public URL getFileUrl(String filePath, String bucketName){
-    Date expiration = new Date(new Date().getTime() + 3600 * 1000L);
+    Date expiration = new Date(new Date().getTime() + Constants.USER_TOKEN_EXPIRE * 1000L);
     // 生成以GET方法访问的签名URL。本示例没有额外请求头，其他人可以直接通过浏览器访问相关内容。
     return ossClient.generatePresignedUrl(bucketName, filePath, expiration);
   }

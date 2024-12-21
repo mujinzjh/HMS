@@ -17,7 +17,9 @@
             and operation_time = #{operation_time}
         </if>
         order by tb_sys_log.operation_time DESC
-        limit #{offset},#{pageSize}
+        <if test="offset >= 0 and pageSize >=0 ">
+            limit #{offset},#{pageSize}
+        </if>
     </select>
 
     <select id="getVisitorCount" resultType="Integer">
@@ -36,6 +38,13 @@
         from tb_sys_log
         WHERE operation_time >= #{startDate} AND operation_time &lt; #{endDate}
         GROUP BY date
+    </select>
+
+    <select id="getLatestLog" resultType="SysLog">
+        SELECT * FROM `BK`.`tb_sys_log`
+        WHERE `operation` LIKE concat('%',#{result},'%')
+        ORDER BY `operation_time` DESC
+        limit 1
     </select>
 
 

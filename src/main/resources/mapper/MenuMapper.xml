@@ -24,7 +24,7 @@
                create_time
         from tb_sys_menu
         where id != 2
-          and parent_id != 2;
+          and parent_id != 2 and status = 1;
     </select>
     <select id="getMenuList" resultType="MenuDo">
         select id,
@@ -38,7 +38,8 @@
                status,
                create_time
         from tb_sys_menu
-        where status = 1;
+        where status = 1
+        order by sort;
     </select>
     <select id="getBySearch" resultType="MenuDo">
         select id,
@@ -55,6 +56,14 @@
         where status = 1 and parent_id = 0;
     </select>
 
+    <update id="batchUpdateStatus" parameterType="list">
+        UPDATE tb_sys_menu
+        SET status = 0
+        WHERE id IN
+        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
 
 </mapper>

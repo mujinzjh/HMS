@@ -21,5 +21,6 @@ public interface SysLogService extends IService<SysLog> {
 
     List<Map<String, Object>> getUsersByYear(Timestamp startDate, Timestamp endDate);
 
+    SysLog getLatestLog(String result);
 
 }

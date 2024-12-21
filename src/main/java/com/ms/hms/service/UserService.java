@@ -27,7 +27,7 @@ public interface UserService extends IService<SysUser> {
 
     R getUserListInfo(Integer pageNo, Integer pageSize, String search);
 
-    R getUserData(Integer pageNo, Integer pageSize, String search);
+    Map<String, Object> getUserData(Integer pageNo, Integer pageSize, String search);
 
     R delUser(Long id);
 

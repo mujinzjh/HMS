@@ -48,4 +48,6 @@ public class SysUserResult implements Serializable {
     private long userRoleId;
 
     private long roleId;
+
+    private String roleName;
 }

@@ -28,8 +28,12 @@ public class SysFile implements Serializable {
   @TableField(value = "file_name")
   private String fileName;
 
+  @TableField(value = "is_delete")
+  private int isDelete;
+
   @TableField(value = "create_time")
   private Timestamp createTime;
+
 
   @TableField(value = "update_time")
   private Timestamp updateTime;

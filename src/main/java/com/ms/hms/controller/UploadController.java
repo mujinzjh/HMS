@@ -3,14 +3,17 @@ package com.ms.hms.controller;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.*;
+import com.ms.hms.Interceptor.TokenInterceptor;
 import com.ms.hms.aop.Log;
 import com.ms.hms.common.result.R;
 import com.ms.hms.common.utils.FileUtils;
 import com.ms.hms.entity.Param.MergeParam;
+import com.ms.hms.entity.SysUser;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ServiceException;
 
 import com.ms.hms.service.OSSService;
+import com.ms.hms.service.SysFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +34,15 @@ public class UploadController {
 
   @Autowired
   private OSSService ossService ;
+  @Autowired
+  private SysFileService sysFileService ;
 
 
   @Value("${aliyun.bucketName}")
   private String bucketName;
+
+  @Value("${aliyun.urlPrefix}")
+  private String urlPrefix;
   @Log(value = "分片上传")
   @GetMapping("/getUploadId")
   public R getUploadId(String fileName) {
@@ -76,6 +84,8 @@ public class UploadController {
       String objectName =  FileUtils.getFullPath(filePath);
       InputStream inputStream = file.getInputStream();
       ossService.uploadFile(inputStream,objectName, bucketName);
+      SysUser user = TokenInterceptor.THREAD_LOCAL.get();
+      sysFileService.saveFile(user.getId(), objectName, FileUtils.getURL(urlPrefix, objectName), filePath);
       return R.ok();
   } catch (Exception e) {
       throw new ServiceException(ExceptionCode.FILE_UPLOAD_FAIL);}

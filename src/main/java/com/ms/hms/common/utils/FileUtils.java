@@ -3,10 +3,12 @@ package com.ms.hms.common.utils;
 import com.ms.hms.Interceptor.TokenInterceptor;
 import com.ms.hms.common.Constants;
 import com.ms.hms.entity.SysUser;
+import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Component
 public class FileUtils {
   public static String getFullPath(String fileName) {
     SysUser user = TokenInterceptor.THREAD_LOCAL.get();
@@ -23,8 +25,11 @@ public class FileUtils {
     return getFileName(fileName);
   }
 
+  public static String getURL(String prefix, String filePath) {
+    return prefix + '/' + filePath;
+  }
+
   public static String getFileSize(long bytes) {
-    System.out.println("字节数: " + bytes + " B");
     if (bytes < 1024) {
       return bytes + " B";
     } else if (bytes < 1024 * 1024) {

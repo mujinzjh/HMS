@@ -1,20 +1,22 @@
 package com.ms.hms.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ms.hms.common.PageModel;
+import com.ms.hms.common.result.R;
 import com.ms.hms.entity.MenuDo;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ServiceException;
 import com.ms.hms.mapper.MenuMapper;
 import com.ms.hms.service.MenuService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,9 +33,25 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDo> implements 
     }
 
     @Override
-    public Map<Long, MenuDo> getAllMenus() {
-        List<MenuDo> menuList = menuMapper.getMenuList();
-        return dealCommon(menuList);
+    public R getAllMenus(int pageNo, int pageSize, String search) {
+        Map<String, Object> searchMap = null;
+        try {
+            searchMap = JSON.parseObject(search);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (null == searchMap) {
+            searchMap = new HashMap<>(1);
+        }
+        PageModel pageModel = PageModel.newPageModel(pageNo, pageSize, 0);
+        searchMap.put("offset", pageModel.getOffset());
+        searchMap.put("pageSize", pageSize);
+        searchMap.putIfAbsent("status", 0);
+        List<MenuDo> menuList = menuMapper.getMenuList(searchMap);
+        Map<Long, MenuDo> result = dealCommon(menuList);
+        Collection<MenuDo> list = result.values();
+        pageModel.setTotalRecord(list.size());
+        return R.ok().ext(pageModel).data(list);
     }
 
     @Override
@@ -56,9 +74,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDo> implements 
 
     @Override
     public int deleteMenu(Long id) {
-        UpdateWrapper<MenuDo> wrapper=new UpdateWrapper<>();
-        wrapper.set("status", 0).set("update_time", new Timestamp(System.currentTimeMillis())).eq("id", id);
-        return menuMapper.update(null, wrapper);
+        List<MenuDo> list = menuMapper.selectList(Wrappers.<MenuDo>lambdaQuery().eq(MenuDo::getPid, id));
+        List<Integer> ids = new ArrayList<>();
+        if (list.size() != 0) {
+            list.forEach(menu -> ids.add(menu.getId().intValue()));
+            ids.add(Math.toIntExact(id));
+            menuMapper.batchUpdateStatus(ids);
+            return ids.size();
+        } else {
+            UpdateWrapper<MenuDo> wrapper=new UpdateWrapper<>();
+            wrapper.set("status", 0).set("update_time", new Timestamp(System.currentTimeMillis())).eq("id", id);
+            return menuMapper.update(null, wrapper);
+        }
     }
 
     @Override
@@ -87,7 +114,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDo> implements 
 
     private void setMenuChildren(Map<Long, MenuDo> menuMap, MenuDo menu) {
         MenuDo parentFunc = menuMap.get(menu.getPid());
-        System.out.println(parentFunc);
         if (null!=parentFunc){
             List<MenuDo> menus = parentFunc.getChildren();
             if (menus==null){

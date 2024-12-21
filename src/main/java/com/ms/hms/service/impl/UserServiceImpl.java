@@ -15,6 +15,7 @@ import com.ms.hms.entity.SysUserRole;
 import com.ms.hms.mapper.MenuMapper;
 import com.ms.hms.mapper.SysUserRoleMapper;
 import com.ms.hms.mapper.UserMapper;
+import com.ms.hms.service.OSSService;
 import com.ms.hms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private OSSService ossService;
 
     @Override
     public SysUser findById(Long id) {
@@ -193,9 +197,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         return R.ok().data(list).ext(pageModel);
     }
     @Override
-    public R getUserData(Integer pageNo, Integer pageSize, String search) {
+    public Map<String, Object> getUserData(Integer pageNo, Integer pageSize, String search) {
         Map searchMap = null;
-
         try {
             searchMap = JSON.parseObject(search);
         } catch (Exception e) {
@@ -206,18 +209,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         }
         List<SysUser> list = new ArrayList<>();
         int count = userMapper.getUserCount(searchMap);
+        Map<String, Object> map = new HashMap<>();
         PageModel pageModel = PageModel.newPageModel(pageSize, pageNo, count);
         if (count <= 0) {
-            return R.ok().data(list).ext(pageModel);
+            map.put("ext", pageModel);
+            map.put("list", list);
+            return map;
         }
-
         searchMap.put("offset", pageModel.getOffset());
         searchMap.put("pageSize", pageSize);
         if (searchMap.get("status") == null) {
             searchMap.put("status", 0);
         }
         list = userMapper.getUserData(searchMap);
-        return R.ok().data(list).ext(pageModel);
+        pageModel.setTotalRecord(list.size());
+        map.put("ext", pageModel);
+        map.put("list", list);
+        return map;
     }
 
     @Override

@@ -19,4 +19,6 @@ public interface SysLogMapper extends BaseMapper<SysLog> {
     List<Map<String, Object>> countUsersByDate(Timestamp startDate, Timestamp endDate);
 
     List<Map<String, Object>> countUsersByYear(Timestamp startDate, Timestamp endDate);
+
+    SysLog getLatestLog(String result);
 }

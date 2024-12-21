@@ -1,5 +1,7 @@
 package com.ms.hms.common;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.ArrayList;
 import java.util.List;
 

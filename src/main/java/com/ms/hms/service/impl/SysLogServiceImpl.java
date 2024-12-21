@@ -125,4 +125,9 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         return resultMap;
     }
 
+    @Override
+    public SysLog getLatestLog(String result) {
+        return sysLogMapper.getLatestLog(result);
+    }
+
 }

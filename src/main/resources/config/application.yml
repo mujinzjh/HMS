@@ -14,8 +14,14 @@ spring:
       path: /hms
   main:
     allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: ${spring.maxFileSize}
+      max-request-size: ${spring.maxRequestSize}
+
 server:
   port: ${server.port}
+
 
 ip2region:
   location: ${ip.path}
