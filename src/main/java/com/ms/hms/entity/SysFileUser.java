@@ -6,30 +6,22 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Data
-@TableName(value = "tb_file")
-public class SysFile implements Serializable {
+@TableName(value = "tb_file_user_relation")
+public class SysFileUser {
   @TableId(type = IdType.AUTO)
   private Long id;
 
-  @TableField(value = "file_path")
-  private String filePath;
+  @TableField(value = "user_id")
+  private Long userId;
 
-  @TableField(value = "obs_path")
-  private String obsPath;
-
-  @TableField(value = "file_name")
-  private String fileName;
-
-  @TableField(value = "is_delete")
-  private int isDelete;
+  @TableField(value = "file_id")
+  private Long fileId;
 
   @TableField(value = "create_time")
   private Timestamp createTime;
-
 
   @TableField(value = "update_time")
   private Timestamp updateTime;

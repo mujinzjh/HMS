@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/file")
@@ -44,6 +41,7 @@ public class FileController {
       map.put("id", file.getId());
       map.put("fileName", file.getFileName());
       map.put("fileSize", ossService.getFileContent(file.getObsPath(), bucketName).length);
+      map.put("filePath", file.getObsPath());
       map.put("createTime", file.getCreateTime());
       map.put("updateTime", file.getUpdateTime());
       resultList.add(map);
@@ -54,7 +52,7 @@ public class FileController {
 
   @Log(value = "删除文件")
   @DeleteMapping(value = "/delete")
-  public R addMenu(Long id) {
+  public R delFile(Long id) {
     if (id == null) {
       throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
     }
@@ -66,5 +64,16 @@ public class FileController {
     } else {
       throw new ServiceException(ExceptionCode.FILE_DELETE_ERROR);
     }
+  }
+
+  @Log(value = "获取文件内容")
+  @GetMapping(value = "/info")
+  public R getInfo(String filePath) throws IOException {
+    if (filePath == null) {
+      throw new ServiceException(ExceptionCode.PARAMTER_ERROR);
+    }
+    byte[] fileContent = ossService.getFileContent(filePath, bucketName);
+    String content = Base64.getEncoder().encodeToString(fileContent);
+    return R.ok().data(content);
   }
 }
