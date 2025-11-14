@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -31,15 +32,15 @@ public class SysUser implements Serializable {
     @TableField(value = "des")
     private String des;
 
-    //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(value = "create_time")
-    private Long createTime;
+    private LocalDateTime createTime;
 
     @TableField(value = "update_time")
-    private Long updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(value = "admin_type")
     private Long adminType;
 
+    @TableField(value = "status")
+    private Long status;
 }

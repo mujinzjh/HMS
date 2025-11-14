@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @TableName(value = "tb_sys_user_role_relation")
@@ -21,6 +22,5 @@ public class SysUserRole implements Serializable {
     private Long roleId;
 
     @TableField(value = "create_time")
-    private Long createTime;
-
+    private LocalDateTime createTime;
 }

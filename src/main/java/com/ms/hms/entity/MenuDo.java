@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -31,6 +32,12 @@ public class MenuDo implements Serializable {
 
     @TableField(value = "parent_id")
     private Long pid;
+
+    @TableField(value = "create_time")
+    private Timestamp createTime;
+
+    @TableField(value = "update_time")
+    private Timestamp updateTime;
 
     private Integer status;
 

@@ -1,0 +1,27 @@
+#数据库配置
+spring:
+  config:
+    additional-location: optional:file:./config/basic/
+    import:
+      - /home/zjh/conf/common/application.properties
+      - application-datasource.yml
+      - application-redis.yml
+      - application-oss.yml
+
+  #  配置基础路径
+  mvc:
+    servlet:
+      path: /hms
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: ${spring.maxFileSize}
+      max-request-size: ${spring.maxRequestSize}
+
+server:
+  port: ${server.port}
+
+
+ip2region:
+  location: ${ip.path}

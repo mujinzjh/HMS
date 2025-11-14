@@ -17,6 +17,9 @@ public class SysRole implements Serializable {
 
     private String name;
 
+    @TableField(value = "role_desc")
+    private String roleDesc;
+
     @TableField(value = "create_time")
     private Long createTime;
 

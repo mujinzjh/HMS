@@ -9,7 +9,7 @@ public class UserParam {
 
     private String username;
 
-    private String avatar;
+//    private String avatar;
 
     private String email;
 

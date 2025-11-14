@@ -1,0 +1,7 @@
+aliyun:
+  endpoint: ${aliyun.oss.endpoint}
+  accessKeyId: ${aliyun.oss.accessKeyId}
+  accessKeySecret: ${aliyun.oss.accessKeySecret}
+  bucketName: ${aliyun.oss.bucketName}
+  urlPrefix: ${aliyun.oss.urlPrefix}
+  region:  ${aliyun.oss.region}

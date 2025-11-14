@@ -16,7 +16,7 @@
     </select>
 
 
-    <select id="getRoleList" resultType="SysUser">
+    <select id="getUserList" resultType="SysUser">
         select distinct tu.username,tu.create_time,tu.des,tu.email,tu.id,tsurr.role_id,tsr.name as roleName from tb_user tu
             inner join tb_sys_user_role_relation tsurr on tu.id = tsurr.user_id
             inner join tb_sys_role tsr on tsurr.role_id = tsr.id
@@ -29,14 +29,45 @@
         </if>
     </select>
 
+    <select id="getUserData" resultType="SysUserResult">
+        select distinct tu.username,
+                        tu.avatar,
+                        tu.create_time,
+                        tu.create_time,
+                        tu.update_time,
+                        tu.admin_type,
+                        tu.des,
+                        tu.email,
+                        tu.id,
+                        ot.id AS userRoleId,
+                        ot.role_id AS roleId,
+                        tsr.name AS roleName,
+                        tu.status,
+        CASE WHEN ot.user_id IS NOT NULL THEN 1 ELSE 0 END AS isCited
+        from tb_user tu
+        left join tb_sys_user_role_relation ot ON tu.id = ot.user_id
+        LEFT JOIN tb_sys_role tsr ON ot.role_id = tsr.id
+        where tu.status = #{status}
+        <if test="name != null and name !=''">
+            and tu.username = #{name}
+        </if>
+        order by tu.create_time
+        <if test="offset >= 0 and pageSize >=0 ">
+            limit #{offset},#{pageSize}
+        </if>
+    </select>
+
+    <update id="deleteById">
+        update tb_user
+        set status = 1
+        where id = #{id}
+    </update>
+
     <update id="updateUser">
         update tb_user
         set update_time = #{currentTimeMillis}
         <if test="username != null and username != ''">
             ,`username`= #{username}
-        </if>
-        <if test="avatar != null and avatar != ''">
-            ,`avatar` = #{avatar}
         </if>
         <if test="des != null and des != ''">
             ,`des` = #{des}

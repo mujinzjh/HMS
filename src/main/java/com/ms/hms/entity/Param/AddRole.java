@@ -8,5 +8,7 @@ public class AddRole {
 
     private String name;
 
+     private String desc;
+
     private String menuIds;
 }

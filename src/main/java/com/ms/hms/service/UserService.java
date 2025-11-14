@@ -3,8 +3,10 @@ package com.ms.hms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ms.hms.common.result.R;
 import com.ms.hms.entity.MenuDo;
+import com.ms.hms.entity.Param.BindParam;
 import com.ms.hms.entity.Param.UserParam;
 import com.ms.hms.entity.SysUser;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -17,11 +19,23 @@ public interface UserService extends IService<SysUser> {
 
     void insertUser(SysUser sysUser);
 
+    int updateAvatar(SysUser sysUser);
+
     R createUser(UserParam userParam, String defaultPwd);
 
     Map<Long, MenuDo> queryMenuByUserId(Long userId);
 
     R getUserListInfo(Integer pageNo, Integer pageSize, String search);
 
+    Map<String, Object> getUserData(Integer pageNo, Integer pageSize, String search);
+
     R delUser(Long id);
+
+    int getUserTotal(String search);
+
+    R userBindRole(BindParam bindParam);
+
+    R userUnbindRole(Long userRoleId);
+
+    void batchImport(MultipartFile file);
 }

@@ -7,20 +7,21 @@ import com.ms.hms.common.Constants;
 import com.ms.hms.common.redis.RedisService;
 import com.ms.hms.common.result.R;
 import com.ms.hms.common.utils.TokenUtils;
-import com.ms.hms.entity.LoginParam;
-import com.ms.hms.entity.MenuDo;
-import com.ms.hms.entity.SysUser;
-import com.ms.hms.entity.UpdatePwd;
+import com.ms.hms.entity.*;
 import com.ms.hms.exception.ExceptionCode;
 import com.ms.hms.exception.ResultHttpCode;
 import com.ms.hms.exception.ServiceException;
+import com.ms.hms.service.OSSService;
+import com.ms.hms.service.SysLogService;
 import com.ms.hms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,13 @@ public class LoginController {
     private UserService userService;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private OSSService ossService;
+    @Autowired
+    private SysLogService sysLogService;
+
+    @Value("${aliyun.bucketName}")
+    private String bucketName;
 
     @Log(value = "登录")
     @PostMapping(value = "/login")
@@ -45,14 +53,25 @@ public class LoginController {
         redisService.set(token, userStr, Constants.USER_TOKEN_EXPIRE);
         Map<String, Object> resultMap = new HashMap<>();
         Map<Long, MenuDo> menus = userService.queryMenuByUserId(user.getId());
+        if (menus.isEmpty()) {
+            throw new ServiceException(ExceptionCode.USER_NOT_BIND_ROLE);
+        }
+        if (user.getAvatar() != null) {
+            URL url = ossService.getFileUrl(user.getAvatar(),bucketName);
+            user.setAvatar(String.valueOf(url));
+        }
+        SysLog log = sysLogService.getLatestLog("退出登录");
+        long curTimestamp = System.currentTimeMillis();
+        long diffTimestamp = curTimestamp - log.getOperationTime().getTime();
         resultMap.put("user", user);
         resultMap.put("token", token);
+        resultMap.put("diff", diffTimestamp);
         resultMap.put("menu", menus);
         return R.ok().data(resultMap);
     }
 
 
-    //    修改密码
+    // 修改密码
     @Log(value = "修改密码")
     @PostMapping(value = "/updatePwd")
     public R updatePwd(@RequestBody UpdatePwd uPwd) {
@@ -60,7 +79,6 @@ public class LoginController {
             throw new ServiceException(ResultHttpCode.BUSINESS_FAILURE);
         }
         SysUser user = TokenInterceptor.THREAD_LOCAL.get();
-        System.out.println(user);
 
         if (null == user) {
             throw new ServiceException(ResultHttpCode.TOKEN_INVAILD);
@@ -76,22 +94,25 @@ public class LoginController {
     //修改密码
     @Log(value = "退出登录")
     @PostMapping(value = "/logOut")
-    public R loginOut() {
+    public R loginOut(HttpServletRequest request) {
         SysUser user = TokenInterceptor.THREAD_LOCAL.get();
         if (user == null) {
             throw new ServiceException(ResultHttpCode.TOKEN_INVAILD);
         }
-        redisService.deleteKey(token);
+        String tokenHeader = request.getHeader("Token");
+        if (token != null || tokenHeader != null) {
+            token = tokenHeader;
+            redisService.deleteKey(token);
+        }
         return R.ok();
     }
-
+    @Log(value = "获取用户访问数量")
     @PostMapping(value = "/add")
     public R insertUser() {
         SysUser sysUser = new SysUser();
         sysUser.setUsername("llj");
         sysUser.setPassword("111111");
         sysUser.setAdminType((long) 1);
-
         userService.insertUser(sysUser);
         return R.ok();
     }

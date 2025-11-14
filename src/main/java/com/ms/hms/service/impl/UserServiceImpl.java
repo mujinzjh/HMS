@@ -8,18 +8,22 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ms.hms.common.PageModel;
 import com.ms.hms.common.result.R;
 import com.ms.hms.entity.MenuDo;
+import com.ms.hms.entity.Param.BindParam;
 import com.ms.hms.entity.Param.UserParam;
-import com.ms.hms.entity.SysRole;
 import com.ms.hms.entity.SysUser;
 import com.ms.hms.entity.SysUserRole;
 import com.ms.hms.mapper.MenuMapper;
 import com.ms.hms.mapper.SysUserRoleMapper;
 import com.ms.hms.mapper.UserMapper;
+import com.ms.hms.service.OSSService;
 import com.ms.hms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +40,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private OSSService ossService;
 
     @Override
     public SysUser findById(Long id) {
@@ -55,7 +62,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
         userMapper.insert(user);
     }
 
-    @Transactional
+  @Override
+  public int updateAvatar(SysUser sysUser) {
+      UpdateWrapper<SysUser> wrapper=new UpdateWrapper<>();
+      wrapper.set("avatar",sysUser.getAvatar()).set("update_time", new Timestamp(System.currentTimeMillis())).eq("id", sysUser.getId());
+      return userMapper.update(null, wrapper);
+  }
+
+  @Transactional
     @Override
     public void updatePwd(Long id, String password) {
         try {
@@ -75,43 +89,82 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     }
 
     @Override
+    public int getUserTotal(String search) {
+        Map searchMap = new HashMap<>(1);
+        return userMapper.getUserCount(searchMap);
+    }
+
+    @Override
+    public R userBindRole(BindParam bindParam) {
+        SysUserRole sysUserRole = new SysUserRole();
+        sysUserRole.setUserId(bindParam.getUserId());
+        sysUserRole.setRoleId(bindParam.getRoleId());
+        sysUserRole.setCreateTime(LocalDateTime.now());
+        try {
+            sysUserRoleMapper.insert(sysUserRole);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return R.ok();
+    }
+
+    @Override
+    public R userUnbindRole(Long userRoleId) {
+        sysUserRoleMapper.delete(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getId,userRoleId));
+        return R.ok();
+    }
+
+    @Override
+    public void batchImport(MultipartFile file) {
+
+    }
+
+
+    @Override
     public R createUser(UserParam userParam, String defaultPwd) {
         if (userParam.getId() == null) {
             SysUser user = new SysUser();
             user.setPassword(defaultPwd);
             user.setUsername(userParam.getUsername());
-            user.setAvatar(userParam.getAvatar());
+//            user.setAvatar(userParam.getAvatar());
             user.setDes(userParam.getDes());
             user.setEmail(userParam.getEmail());
-            user.setCreateTime(System.currentTimeMillis());
+            user.setCreateTime(LocalDateTime.now());
             try {
                 userMapper.insert(user);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            SysUserRole sysUserRole = new SysUserRole();
-            sysUserRole.setUserId(user.getId());
-            sysUserRole.setRoleId(userParam.getRoleId());
-            sysUserRole.setCreateTime(System.currentTimeMillis());
-
-            try {
-                sysUserRoleMapper.insert(sysUserRole);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (userParam.getRoleId() != null) {
+                SysUserRole sysUserRole = new SysUserRole();
+                sysUserRole.setUserId(user.getId());
+                sysUserRole.setRoleId(userParam.getRoleId());
+                sysUserRole.setCreateTime(LocalDateTime.now());
+                try {
+                    sysUserRoleMapper.insert(sysUserRole);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
         } else {
             try {
-                userMapper.updateUser(userParam.getId(),userParam.getAvatar(),userParam.getDes(),userParam.getEmail(),userParam.getUsername(),System.currentTimeMillis());
+                userMapper.updateUser(userParam.getId(),userParam.getDes(),userParam.getEmail(),userParam.getUsername(),LocalDateTime.now());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             SysUserRole sysUserRole = sysUserRoleMapper.selectOne(Wrappers.<SysUserRole>lambdaQuery().eq(SysUserRole::getUserId,userParam.getId()));
             if (null != sysUserRole){
                 if (sysUserRole.getRoleId() != userParam.getRoleId()) {
-                        sysUserRoleMapper.update(null,Wrappers.<SysUserRole>lambdaUpdate().set(SysUserRole::getRoleId,userParam.getRoleId()).eq(SysUserRole::getId,sysUserRole.getId()));
+                    sysUserRoleMapper.update(null,Wrappers.<SysUserRole>lambdaUpdate().set(SysUserRole::getRoleId,userParam.getRoleId()).eq(SysUserRole::getId,sysUserRole.getId()));
                 }
+            } else {
+                SysUserRole addSysUserRole = new SysUserRole();
+                addSysUserRole.setRoleId(userParam.getRoleId());
+                addSysUserRole.setUserId(userParam.getId());
+                addSysUserRole.setCreateTime(LocalDateTime.now());
+                sysUserRoleMapper.insert(addSysUserRole);
             }
         }
 
@@ -140,8 +193,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
 
         searchMap.put("offset", pageModel.getOffset());
         searchMap.put("pageSize", pageSize);
-        list = userMapper.getRoleList(searchMap);
+        list = userMapper.getUserList(searchMap);
         return R.ok().data(list).ext(pageModel);
+    }
+    @Override
+    public Map<String, Object> getUserData(Integer pageNo, Integer pageSize, String search) {
+        Map searchMap = null;
+        try {
+            searchMap = JSON.parseObject(search);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (null == searchMap) {
+            searchMap = new HashMap<>(1);
+        }
+        List<SysUser> list = new ArrayList<>();
+        int count = userMapper.getUserCount(searchMap);
+        Map<String, Object> map = new HashMap<>();
+        PageModel pageModel = PageModel.newPageModel(pageSize, pageNo, count);
+        if (count <= 0) {
+            map.put("ext", pageModel);
+            map.put("list", list);
+            return map;
+        }
+        searchMap.put("offset", pageModel.getOffset());
+        searchMap.put("pageSize", pageSize);
+        if (searchMap.get("status") == null) {
+            searchMap.put("status", 0);
+        }
+        list = userMapper.getUserData(searchMap);
+        pageModel.setTotalRecord(list.size());
+        map.put("ext", pageModel);
+        map.put("list", list);
+        return map;
     }
 
     @Override
